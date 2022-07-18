@@ -1,0 +1,30 @@
+#base "_econ_weapon.txt"
+"WeaponData"
+{
+    "fire_anim_rate"            "1"
+    "fire_rate"             "3.85"
+	"reload_time" 									".33"
+    "reloadempty_time"								".75"
+    "reloadsegment_time_loop"						".40"
+    "reloadsegment_time_end"						".45"
+    "reloadsegmentempty_time_end"					".60"
+    "viewmodel_jolt_scale"                      "1.0"
+    "viewmodel_jolt_backwardPerShot"            "-0.3" 
+    "viewmodel_jolt_roll"                       "0 3.0 0.0"
+    "viewmodel_jolt_side"                       "0 0.02 0"
+	"viewkick_scale_valueDecayDelay"           "0.475"
+    "viewkick_scale_valueDecayRate"            "35"
+
+	// Viewkick - Pitch
+	"viewkick_pitch_base"                      "-0.49"
+    "viewkick_pitch_random"                    "0.15"
+	"viewkick_pitch_softScale"                 "2.7"
+    "viewkick_pitch_hardScale"                 "0.4"
+    "anim_alt_idleAttack"               "1"
+
+	// Viewkick - Yaw
+	"viewkick_yaw_base"                        "-0.16"
+	"viewkick_yaw_random"                      "0.30"
+	"viewkick_yaw_softScale"                   "2.7"
+	"viewkick_yaw_hardScale"                   "0.4"
+}

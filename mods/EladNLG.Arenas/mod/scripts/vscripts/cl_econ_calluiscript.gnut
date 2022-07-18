@@ -1,0 +1,98 @@
+untyped
+global function EconUI_SetClientWeapons_Update
+global function EconUI_GetClientWeapons
+
+struct EconWeaponData
+{
+    int ammo,
+    string className,
+    array<string> mods
+}
+
+void function EconUI_SetClientWeapons_Update()
+{
+}
+
+void function EconUI_GetClientWeapons()
+{
+    RunUIScript( "Econ_SetMoney", GetLocalClientPlayer().GetPlayerGameStat(PGS_ASSAULT_SCORE) )
+    RunUIScript("Econ_ResetWeaponData")
+    entity weapon
+    if (GetLocalClientPlayer().GetMainWeapons().len() > 0)
+    {
+        weapon = GetLocalClientPlayer().GetMainWeapons()[0]
+        EconWeaponData primary
+        primary.ammo = weapon.GetWeaponPrimaryAmmoCount()
+        if (weapon.GetLifetimeShotsRemaining() != -1)
+        {
+            primary.ammo = weapon.GetLifetimeShotsRemaining()
+        }
+        primary.className = weapon.GetWeaponClassName()
+        PassModsToUI(0, weapon)
+        RunUIScript( "Econ_SetClientWeaponData", 0, primary.className, primary.ammo )
+    }
+
+    if (GetLocalClientPlayer().GetMainWeapons().len() > 1)
+    {
+        weapon = GetLocalClientPlayer().GetMainWeapons()[1]
+        EconWeaponData secondary
+        secondary.ammo = weapon.GetWeaponPrimaryAmmoCount()
+        if (weapon.GetLifetimeShotsRemaining() != -1)
+        {
+            secondary.ammo = weapon.GetLifetimeShotsRemaining()
+        }
+        secondary.className = weapon.GetWeaponClassName()
+        PassModsToUI(1, weapon)
+        RunUIScript( "Econ_SetClientWeaponData", 1, secondary.className, secondary.ammo )
+    }
+
+    if (GetLocalClientPlayer().GetMainWeapons().len() > 2)
+    {
+        weapon = GetLocalClientPlayer().GetMainWeapons()[2]
+        EconWeaponData weapon3
+        weapon3.ammo = weapon.GetWeaponPrimaryAmmoCount()
+        if (weapon.GetLifetimeShotsRemaining() != -1)
+        {
+            weapon3.ammo = weapon.GetLifetimeShotsRemaining()
+        }
+        weapon3.className = weapon.GetWeaponClassName()
+        PassModsToUI(2, weapon)
+        RunUIScript( "Econ_SetClientWeaponData", 2, weapon3.className, weapon3.ammo )
+    }
+
+    if (GetLocalClientPlayer().GetOffhandWeapon(0) != null)
+    {
+        weapon = GetLocalClientPlayer().GetOffhandWeapon(0)
+        EconWeaponData ordnance
+        ordnance.ammo = weapon.GetWeaponPrimaryClipCount()
+        ordnance.className = weapon.GetWeaponClassName()
+        PassModsToUI(4, weapon)
+        RunUIScript( "Econ_SetClientWeaponData", 4, ordnance.className, ordnance.ammo )
+    }
+
+    if (GetLocalClientPlayer().GetOffhandWeapon(1) != null)
+    {
+        weapon = GetLocalClientPlayer().GetOffhandWeapon(1)
+        EconWeaponData tactical
+        tactical.ammo = weapon.GetWeaponPrimaryClipCount()
+        tactical.className = weapon.GetWeaponClassName()
+        if (tactical.className == "mp_ability_grapple")
+            tactical.ammo = int(GetLocalClientPlayer().GetSuitGrapplePower())
+        PassModsToUI(3, weapon)
+        RunUIScript( "Econ_SetClientWeaponData", 3, tactical.className, tactical.ammo )
+    }
+}
+
+void function PassModsToUI(int slot, entity weapon)
+{
+    array<string> mods = weapon.GetMods()
+
+    string serStr = ""
+    foreach ( index, mod in mods )
+    {
+        serStr += mod
+        if (index != mods.len() - 1) serStr += "\n"
+    }
+    
+    RunUIScript( "Econ_AddModsToWeapon_ShopTest", slot, serStr )
+}

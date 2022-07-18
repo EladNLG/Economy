@@ -1,0 +1,286 @@
+"playlists"
+{
+	"Gamemodes"
+	{
+		"econ"
+		{
+			"inherit"		"defaults"
+			"vars"
+			{
+				"name"											"Econ"
+				"lobbytitle"									"Econ Lobby"
+				"description"									"Start with a P2016 and no abilities. Gain money to buy weapons and upgrades."
+				"hint"											"Start with a P2016 and no abilities. Gain money to buy weapons and upgrades."
+				"abbreviation"									"ECON"
+				"max_players"									"16"
+				"max_teams"										"2"
+				"classic_mp"									"1"
+				"scorelimit"									"15"	// temp until we have a way of dynamically setting non-default scorelimit in code
+				"roundtimelimit"								"3"
+				"roundscorelimit"								"5"
+				// starting weapon
+				"econ_starting_weapon"							"mp_weapon_wingman"
+				"econ_starting_money"							"800"
+				"econ_base_round_reward"						"1500"
+				"econ_round_reward_bonus_per_round"				"0"
+				"econ_base_win_reward"							"750"
+				"econ_kill_reward"								"250"
+
+				"econ_price_titan"								"5000"
+				"econ_price_boost"								"2000"
+				// ////////////////////////////////////////////////////////////////////////////////
+				// PRICES                                    //
+				// these are playlist vars that decide the prices of weapons/abilities.     //
+				// they get automatically synchronized to the client - change them as you wish! //
+				// ////////////////////////////////////////////////////////////////////////////////
+				// Abilities - price per charge.
+				// NOTE: abilities have NO COOLDOWN IN ECON.
+				"econ_price_ability_cloak"						"100"
+				"econ_price_ability_grapple"					"125"
+				"econ_price_ability_heal"						"125"
+				"econ_price_weapon_deployable_cover"			"200"
+				"econ_price_ability_shifter"					"100"
+				"econ_price_ability_holopilot"					"50"	// holopilot and holoshift are priced separately.
+				"econ_price_ability_holoshift"					"125"
+				"econ_price_weapon_grenade_sonar"				"100"
+
+				// GRENADES
+				"econ_price_weapon_frag_grenade"				"350"
+				"econ_price_weapon_grenade_emp"					"200"
+				"econ_price_weapon_grenade_gravity"				"250"
+				
+				"econ_price_weapon_satchel"						"225" 	// so are satchel and phase satchel.
+				"econ_price_weapon_phase_satchel"				"350"
+				
+				"econ_price_weapon_thermite_grenade"			"200"
+				"econ_price_weapon_grenade_electric_smoke"		"150"
+
+				// Weapons - price per clip.
+				// ///////////
+				// PISTOLS //
+				// ///////////
+				// P2016
+				"econ_price_weapon_semipistol"					"400"
+				"econ_price_weapon_semipistol_ammo"				"150"
+				// BASE AMMO - how much stockpile ammo the player starts with. The player ALWAYS starts with a full clip.
+				"econ_weapon_semipistol_stockpile"				"24"
+				// AMMO SIZE - how much ammo the player gains with each purchase.
+				"econ_weapon_semipistol_ammo_size"				"24"
+
+				"econ_price_weapon_autopistol"					"650"
+				"econ_price_weapon_autopistol_ammo"				"250"
+				"econ_weapon_autopistol_ammo_size"				"20"
+				"econ_weapon_autopistol_stockpile"				"20"
+
+				"econ_weapon_semipistol_stockpile"				"40"
+				
+				"econ_price_weapon_wingman"						"0"
+				"econ_price_weapon_wingman_ammo"				"150"
+				"econ_weapon_wingman_stockpile"					"12"
+				"econ_weapon_wingman_ammo_size"					"12"
+				// //////////////////
+				// ASSAULT RIFLES //
+				// //////////////////
+				"econ_price_weapon_rspn101"						"2400"
+				"econ_price_weapon_rspn101_ammo"				"275"
+				"econ_weapon_rspn101_stockpile"					"48"
+				"econ_weapon_rspn101_ammo_size"					"48"
+
+				"econ_price_weapon_rspn101_og"					"2400"
+				"econ_price_weapon_rspn101_og_ammo"				"275"
+				"econ_weapon_rspn101_og_stockpile"				"48"
+				"econ_weapon_rspn101_og_ammo_size"				"48"
+
+				"econ_price_weapon_hemlok"						"2150"
+				"econ_price_weapon_hemlok_ammo"					"275"
+				"econ_weapon_hemlok_stockpile"					"48"
+				"econ_weapon_hemlok_ammo_size"					"48"
+
+				"econ_price_weapon_g2"							"2750"
+				"econ_price_weapon_g2_ammo"						"550"
+				"econ_weapon_g2_stockpile"						"14"
+				"econ_weapon_g2_ammo_size"						"14"
+
+				"econ_price_weapon_vinson"						"2350"
+				"econ_price_weapon_vinson_ammo"					"375"
+				"econ_weapon_vinson_stockpile"					"60"
+				"econ_weapon_vinson_ammo_size"					"60"
+				// ////////
+				// SMGs //
+				// ///////
+				"econ_price_weapon_car"							"3300"
+				"econ_price_weapon_car_ammo"					"500"
+				"econ_weapon_car_stockpile"						"30"
+				"econ_weapon_car_ammo_size"						"30"
+
+				"econ_price_weapon_r97"							"3300"
+				"econ_price_weapon_r97_ammo"					"500"
+				"econ_weapon_r97_stockpile"						"48"
+				"econ_weapon_r97_ammo_size"						"48"
+
+				"econ_price_weapon_hemlok_smg"					"3150"
+				"econ_price_weapon_hemlok_smg_ammo"				"350"
+				"econ_weapon_hemlok_smg_stockpile"				"33"
+				"econ_weapon_hemlok_smg_ammo_size"				"33"
+
+				"econ_price_weapon_alternator_smg"				"3150"
+				"econ_price_weapon_alternator_smg_ammo"			"350"
+				"econ_weapon_alternator_smg_stockpile"			"20"
+				"econ_weapon_alternator_smg_ammo_size"			"20"
+				// ////////
+				// LMGs //
+				// ////////
+				"econ_price_weapon_lmg"							"3500"
+				"econ_price_weapon_lmg_ammo"					"600"
+				"econ_weapon_lmg_stockpile"						"0"
+				"econ_weapon_lmg_ammo_size"						"80"
+
+				"econ_price_weapon_lstar"						"2800"
+				"econ_price_weapon_lstar_ammo"					"475"
+				"econ_weapon_lstar_stockpile"					"35"
+				"econ_weapon_lstar_ammo_size"					"35"
+
+				"econ_price_weapon_esaw"						"2700"
+				"econ_price_weapon_esaw_ammo"					"550"
+				"econ_weapon_esaw_stockpile"					"55"
+				"econ_weapon_esaw_ammo_size"					"55"
+				// ///////////
+				// Snipers //
+				// ///////////
+				"econ_price_weapon_sniper"						"3400"
+				"econ_price_weapon_sniper_ammo"					"1000"
+				"econ_weapon_sniper_stockpile"					"4"
+				"econ_weapon_sniper_ammo_size"					"8"
+
+				"econ_price_weapon_doubletake"					"1850"
+				"econ_price_weapon_doubletake_ammo"				"350"
+				"econ_weapon_doubletake_stockpile"				"12"
+				"econ_weapon_doubletake_ammo_size"				"12"
+
+				"econ_price_weapon_dmr"							"1250"
+				"econ_price_weapon_dmr_ammo"					"250"
+				"econ_weapon_dmr_stockpile"						"12"
+				"econ_weapon_dmr_ammo_size"						"12"
+				// ////////////
+				// Shotguns //
+				// ////////////
+				"econ_price_weapon_mastiff"						"1950"
+				"econ_price_weapon_mastiff_ammo"				"350"
+				"econ_weapon_mastiff_stockpile"					"8"
+				"econ_weapon_mastiff_ammo_size"					"4"
+
+				"econ_price_weapon_shotgun"						"2250"
+				"econ_price_weapon_shotgun_ammo"				"450"
+				"econ_weapon_shotgun_stockpile"					"12"
+				"econ_weapon_shotgun_ammo_size"					"6"
+				// //////////////
+				// explosives //
+				// //////////////
+				"econ_price_weapon_epg"							"2600"
+				"econ_price_weapon_epg_ammo"					"500"
+				"econ_weapon_epg_stockpile"						"5"
+				"econ_weapon_epg_ammo_size"						"5"
+
+				"econ_price_weapon_pulse_lmg"					"3200"
+				"econ_price_weapon_pulse_lmg_ammo"				"600"
+				"econ_weapon_pulse_lmg_stockpile"				"16"
+				"econ_weapon_pulse_lmg_ammo_size"				"16"
+				"econ_price_weapon_softball"					"2500"
+				"econ_price_weapon_softball_ammo"				"500"
+				"econ_weapon_softball_stockpile"				"6"
+				"econ_weapon_softball_ammo_size"				"6"
+
+				"econ_price_weapon_smr"							"2600"
+				"econ_price_weapon_smr_ammo"					"500"
+				"econ_weapon_smr_stockpile"						"40"
+				"econ_weapon_smr_ammo_size"						"40"
+				// ///////////////////
+				// Primary Pistols //
+				// //////////////////
+				"econ_price_weapon_wingman_n"					"1500"
+				"econ_price_weapon_wingman_n_ammo"				"450"
+				"econ_weapon_wingman_n_stockpile"				"12"
+				"econ_weapon_wingman_n_ammo_size"				"12"
+
+				"econ_price_weapon_shotgun_pistol"				"1750"
+				"econ_price_weapon_shotgun_pistol_ammo"			"475"
+				"econ_weapon_shotgun_pistol_stockpile"			"12"
+				"econ_weapon_shotgun_pistol_ammo_size"			"12"
+				// ///////////////
+				// Anti-Titans //
+				// ///////////////
+				"econ_price_weapon_defender"					"3500"
+				"econ_price_weapon_defender_ammo"				"1000"
+				"econ_weapon_defender_stockpile"				"12"
+				"econ_weapon_defender_ammo_size"				"8"
+
+				"econ_price_weapon_mgl"							"250"
+				"econ_price_weapon_mgl_ammo"					"100"
+				"econ_weapon_mgl_stockpile"						"8"
+				"econ_weapon_mgl_ammo_size"						"8"
+
+				"econ_price_weapon_arc_launcher"				"250"
+				"econ_price_weapon_arc_launcher_ammo"			"25"
+				"econ_weapon_arc_launcher_stockpile"			"2"
+				"econ_weapon_arc_launcher_ammo_size"			"2"
+
+				"econ_price_weapon_peacekraber"					"2750"
+				"econ_price_weapon_peacekraber_ammo"			"750"
+				"econ_weapon_peacekraber_stockpile"				"10"
+				"econ_weapon_peacekraber_ammo_size"				"10"
+				// ///////////////
+				// CONSUMABLES //
+				// ///////////////
+				// coming soon :)
+			}
+		}
+	}
+	"Playlists"
+	{
+		"econ"
+		{
+			"inherit"		"defaults"
+			"vars"
+			{
+				"name"					"#PL_gg"
+				"lobbytitle"			"#PL_gg_lobby"
+				"description"			"#PL_gg_desc"
+				"abbreviation"			"#PL_gg_abbr"
+				"image"					"varietypack"
+				// mixtape_slot 7
+				"mixtape_timeout"		"120"
+				"visible"				"0"
+			}
+			"gamemodes"
+			{
+				"econ"
+				{
+					"maps"
+					{
+						"mp_forwardbase_kodai"		"1"
+						"mp_grave"					"1"
+						"mp_homestead"				"1"
+						"mp_thaw"					"1"
+						"mp_black_water_canal"		"1"
+						"mp_eden"					"1"
+						"mp_drydock"				"1"
+						"mp_crashsite3"				"1"
+						"mp_complex3"				"1"
+						"mp_angel_city"				"1"
+						"mp_colony02"				"1"
+						"mp_glitch"					"1"
+						"mp_lf_stacks"				"1"
+						"mp_lf_deck"				"1"
+						"mp_lf_meadow"				"1"
+						"mp_lf_traffic"				"1"
+						"mp_lf_township"			"1"
+						"mp_lf_uma"					"1"
+						"mp_relic02"				"1"
+						"mp_wargames"				"1"
+						"mp_rise"					"1"
+					}
+				}
+			}
+		}
+	}
+}

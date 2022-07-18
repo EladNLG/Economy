@@ -1,0 +1,994 @@
+"resource/ui/menus/arenas_buy.menu"
+{
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	"menu"
+	{
+		"ControlName"						"Frame"
+		"xpos"								"0"
+		"ypos"								"0"
+		"zpos"								"3"
+		"wide"								"f0"
+		"tall"								"f0"
+		"autoResize"						"1"
+		"visible"							"1"
+		"enabled"							"1"
+		"pinCorner"							"0"
+		"PaintBackgroundType"				"0"
+		"infocus_bgcolor_override"			"0 0 0 50"
+		"outoffocus_bgcolor_override"		"0 0 0 50"
+		"Vignette"
+		{
+			"ControlName"			"ImagePanel"
+			"InheritProperties"		"MenuVignette"
+		}
+		"Title"
+		{
+			"ControlName"			"Label"
+			"InheritProperties"		"MenuTitle"
+			"labelText"				"BUY MENU"
+		}
+		"ButtonMoney"
+		{
+			"ControlName"				"Label"
+			"font"						"Default_44_DropShadow"
+			"xpos"						"0"
+			"auto_wide_tocontents"		"1"
+			"labelText"					"<PlayerCountPlayerCount>"
+			"fgcolor_override"			"255 255 255 180"
+			"textAlignment"				"center"
+			"wide"						"120"
+			"tall"						"60"
+			"pin_to_sibling"			"ButtonSuit"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"Background"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"SuitButton"
+			"rui"						"ui/control_options_description.rpak"
+			"zpos"						"-2"
+			"xpos"						"25"
+			"ypos"						"60"
+			"wide"						"1500"
+			"tall"						"600"
+			"navDown"					"ButtonPrimary"
+			"navRight"					"ButtonPilotCamo"
+			"pin_to_sibling"			"ButtonSuit"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"ImgTopBar"
+		{
+			"ControlName"			"ImagePanel"
+			"InheritProperties"		"MenuTopBar"
+		}
+		"DarkenBackground"
+		{
+			"ControlName"			"Label"
+			"classname"				"ConnectingHUD"
+			"xpos"					"0"
+			"ypos"					"0"
+			"zpos"					"-1000"
+			"wide"					"f0"
+			"tall"					"f0"
+			"labelText"				""
+			"bgcolor_override"		"0 0 0 50"
+			"visible"				"1"
+			"paintbackground"		"1"
+		}
+		"TacticalName"
+		{
+			"ControlName"			"RuiPanel"
+			"InheritProperties"		"RuiLoadoutLabel"
+			"ypos"					"78"
+		}
+		"ButtonSuit"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"SuitButton"
+			"classname"					"PilotLoadoutPanelButtonClass"
+			"scriptID"					"suit"
+			"tabPosition"				"1"
+			"xpos"						"-100"
+			"ypos"						"100"
+			"navDown"					"ButtonSuitBuyAmmo"
+			"navRight"					"ButtonOrdnance"
+			"pin_to_sibling"			"TacticalName"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_LEFT"
+		}
+		"ButtonSuitBuyAmmo"
+		{
+			"ControlName"					"RuiButton"
+			"InheritProperties"				"RuiSmallButton"
+			"tabPosition"					"1"
+			"xpos"							"2"
+			"labelText"						"+"
+			"textAlignment"					"center"
+			"wide"							"40"
+			"textinsety"					"15"
+			"use_proportional_insets"		"1"
+			"ypos"							"0"
+			"navUp"							"ButtonSuit"
+			"navDown"						"ButtonPrimary"
+			"navLeft"						"ButtonGender"
+			"navRight"						"ButtonOrdnance"
+			"pin_to_sibling"				"ButtonSuit"
+			"pin_corner_to_sibling"			"TOP_RIGHT"
+			"pin_to_sibling_corner"			"BOTTOM_RIGHT"
+		}
+		"ButtonSuitBuyPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"buyPrice"
+			"font"						"Default_17"
+			"wide"						"60"
+			"textAlignment"				"east"
+			"xpos"						"10"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"-25$"
+			"pin_to_sibling"			"ButtonSuitBuyAmmo"
+			"pin_corner_to_sibling"		"RIGHT"
+			"pin_to_sibling_corner"		"LEFT"
+		}
+		"ButtonSuitSell"
+		{
+			"ControlName"					"RuiButton"
+			"InheritProperties"				"RuiSmallButton"
+			"tabPosition"					"1"
+			"xpos"							"2"
+			"labelText"						"-"
+			"textAlignment"					"center"
+			"wide"							"40"
+			"textinsety"					"15"
+			"use_proportional_insets"		"1"
+			"ypos"							"0"
+			"navUp"							"ButtonSuit"
+			"navDown"						"ButtonPrimary"
+			"navRight"						"ButtonSuitBuyAmmo"
+			"pin_to_sibling"				"ButtonSuit"
+			"pin_corner_to_sibling"			"TOP_LEFT"
+			"pin_to_sibling_corner"			"BOTTOM_LEFT"
+		}
+		"ButtonSuitSellPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"buyPrice"
+			"font"						"Default_17"
+			"wide"						"110"
+			"xpos"						"10"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"+25$"
+			"pin_to_sibling"			"ButtonSuitSell"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"RIGHT"
+		}
+		"ButtonSuitBG"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"SuitButton"
+			"rui"						"ui/control_options_description.rpak"
+			"zpos"						"-1"
+			"navDown"					"ButtonPrimary"
+			"navRight"					"ButtonPilotCamo"
+			"pin_to_sibling"			"ButtonSuit"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"TacticalBarBG"
+		{
+			"ControlName"				"CHudProgressBar"
+			"pin_to_sibling"			"ButtonSuit"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"ProgressDirection"			"2"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+			"bg_image"					"vgui/hud/white"
+			"fg_image"					"vgui/hud/white"
+			"fgcolor_override"			"0 0 0 175"
+			"bgcolor_override"			"0 0 0 0"
+			"SegmentSize"				"25"
+			"SegmentGap"				"4"
+			// "SegmentFill"				"2"
+			"xpos"						"6"
+			"wide"						"5"
+			"tall"						"112"
+			"visible"					"1"
+			// image				vgui/hud/white
+		}
+		"TacticalBar"
+		{
+			"ControlName"				"CHudProgressBar"
+			"pin_to_sibling"			"ButtonSuit"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+			"bg_image"					"vgui/hud/white"
+			"fg_image"					"vgui/hud/white"
+			"fgcolor_override"			"45 255 255 255"
+			"bgcolor_override"			"0 0 0 0"
+			"SegmentSize"				"25"
+			"SegmentGap"				"4"
+			"ProgressDirection"			"2"
+			// "SegmentFill"				"2"
+			"classname"					"bar"
+			"xpos"						"6"
+			"wide"						"5"
+			"tall"						"112"
+			"visible"					"1"
+			// image				vgui/hud/white
+		}
+		// TacticalBind
+		// {
+		// ControlName				RuiPanel
+		// InheritProperties       RuiBindLabel
+		// xpos                    -6
+		// ypos                    -6
+		//
+		// pin_to_sibling			ButtonSuit
+		// pin_corner_to_sibling	BOTTOM_LEFT
+		// pin_to_sibling_corner	BOTTOM_LEFT
+		// }
+		"OrdnanceName"
+		{
+			"ControlName"				"RuiPanel"
+			"InheritProperties"			"RuiLoadoutLabel"
+			"xpos"						"-230"
+			"pin_to_sibling"			"ButtonOrdnance"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"ButtonOrdnance"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonMedium"
+			"classname"					"PilotLoadoutPanelButtonClass"
+			"scriptID"					"ordnance"
+			"xpos"						"120"
+			"navDown"					"ButtonOrdnanceSell"
+			"navUp"						"ButtonOrdnanceBuyAmmo"
+			"navLeft"					"ButtonSuit"
+			"navRight"					"BuyConsumable0"
+			"pin_to_sibling"			"ButtonSuit"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonOrdnanceBG"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonMedium"
+			"rui"						"ui/control_options_description.rpak"
+			"zpos"						"-1"
+			"navDown"					"ButtonPrimary"
+			"navLeft"					"ButtonSuit"
+			"navRight"					"ButtonPilotCamo"
+			"pin_to_sibling"			"ButtonOrdnance"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"OrdnanceBarBG"
+		{
+			"ControlName"				"CHudProgressBar"
+			"pin_to_sibling"			"ButtonOrdnance"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"ProgressDirection"			"2"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+			"bg_image"					"vgui/hud/white"
+			"fg_image"					"vgui/hud/white"
+			"fgcolor_override"			"0 0 0 175"
+			"bgcolor_override"			"0 0 0 0"
+			"SegmentSize"				"21"
+			"SegmentGap"				"4"
+			// "SegmentFill"				"2"
+			"xpos"						"6"
+			"wide"						"5"
+			"tall"						"96"
+			"visible"					"1"
+			"scriptID"					"ordnance"
+			// image				vgui/hud/white
+		}
+		"OrdnanceBar"
+		{
+			"ControlName"				"CHudProgressBar"
+			"pin_to_sibling"			"ButtonOrdnance"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"classname"					"bar"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+			"bg_image"					"vgui/hud/white"
+			"fg_image"					"vgui/hud/white"
+			"fgcolor_override"			"255 255 45 255"
+			"bgcolor_override"			"0 0 0 0"
+			"SegmentSize"				"21"
+			"SegmentGap"				"4"
+			"ProgressDirection"			"2"
+			// "SegmentFill"				"2"
+			"xpos"						"6"
+			"wide"						"5"
+			"tall"						"96"
+			"visible"					"1"
+			"scriptID"					"ordnance"
+			// image				vgui/hud/white
+		}
+		"ButtonOrdnanceBuyAmmo"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"buyAmmo"
+			"scriptID"					"ordnance"
+			"wide"						"96"
+			"labelText"					"+"
+			"textAlignment"				"center"
+			"navDown"					"ButtonOrdnance"
+			"navLeft"					"ButtonSuit"
+			"navRight"					"BuyConsumable0"
+			"pin_to_sibling"			"ButtonOrdnance"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+			"fgcolor_override"			"255 255 255 255"
+		}
+		"ButtonOrdnanceBuyPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"buyPrice"
+			"font"						"Default_17"
+			"wide"						"110"
+			"xpos"						"10"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"-25$"
+			"pin_to_sibling"			"ButtonOrdnanceBuyAmmo"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"RIGHT"
+		}
+		"ButtonOrdnanceSell"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"sellAmmo"
+			"scriptID"					"ordnance"
+			"wide"						"96"
+			"labelText"					"-"
+			"textAlignment"				"center"
+			"navDown"					"ButtonSecondary"
+			"navLeft"					"ButtonSuit"
+			"navUp"						"ButtonOrdnance"
+			"navRight"					"BuyConsumable0"
+			"pin_to_sibling"			"ButtonOrdnance"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_LEFT"
+		}
+		"ButtonOrdnanceSellPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"buyPrice"
+			"font"						"Default_17"
+			"wide"						"110"
+			"xpos"						"10"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"+25$"
+			"pin_to_sibling"			"ButtonOrdnanceSell"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"RIGHT"
+		}
+		// OrdnanceBind
+		// {
+		// ControlName				RuiPanel
+		// InheritProperties       RuiBindLabel
+		// xpos                    -6
+		// ypos                    -6
+		//
+		// pin_to_sibling			ButtonOrdnance
+		// pin_corner_to_sibling	BOTTOM_LEFT
+		// pin_to_sibling_corner	BOTTOM_LEFT
+		// }
+		// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		"PrimaryName"
+		{
+			"ControlName"				"RuiPanel"
+			"InheritProperties"			"RuiLoadoutLabel"
+			"ypos"						"120"
+			"pin_to_sibling"			"ButtonSuit"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_LEFT"
+		}
+		"ButtonPrimary"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonLarge"
+			"classname"					"PilotLoadoutPanelButtonClass"
+			"scriptID"					"primary"
+			"navUp"						"ButtonSuitBuyAmmo"
+			"navDown"					"ButtonPrimarySell"
+			"navRight"					"ButtonPrimaryBuyAmmo"
+			"pin_to_sibling"			"PrimaryName"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_LEFT"
+		}
+		"ButtonPrimaryBG"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonLarge"
+			"rui"						"ui/control_options_description.rpak"
+			"zpos"						"-1"
+			"navDown"					"ButtonPrimary"
+			"navLeft"					"ButtonSuit"
+			"navRight"					"ButtonPilotCamo"
+			"pin_to_sibling"			"ButtonPrimary"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"ButtonPrimaryBuyAmmo"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"buyAmmo"
+			"scriptID"					"primary"
+			"xpos"						"6"
+			"wide"						"120"
+			"labelText"					"+"
+			"textAlignment"				"center"
+			"navUp"						"ButtonSuit"
+			"navDown"					"ButtonPrimarySell"
+			"navLeft"					"ButtonPrimary"
+			"navRight"					"ButtonSecondary"
+			"pin_to_sibling"			"ButtonPrimary"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonPrimaryBuyPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"buyPrice"
+			"font"						"Default_17"
+			"xpos"						"6"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"-25$"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonPrimaryBuyAmmo"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonPrimaryAmmo"
+		{
+			"ControlName"				"Label"
+			"font"						"Default_44_DropShadow"
+			"xpos"						"6"
+			"InheritProperties"			"RuiSmallButton"
+			"labelText"					"80"
+			"textAlignment"				"center"
+			"wide"						"120"
+			"tall"						"120"
+			"pin_to_sibling"			"ButtonPrimary"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"RIGHT"
+		}
+		"ButtonPrimarySell"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"sellAmmo"
+			"scriptID"					"primary"
+			"wide"						"120"
+			"labelText"					"-"
+			"textAlignment"				"center"
+			"navUp"						"ButtonPrimaryBuyAmmo"
+			"navLeft"					"ButtonPrimary"
+			"navRight"					"ButtonSecondary"
+			"pin_to_sibling"			"ButtonPrimary"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+		}
+		"ButtonPrimarySellPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"font"						"Default_17"
+			"xpos"						"6"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"+25$"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonPrimarySell"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		// PrimaryBind
+		// {
+		// ControlName				RuiPanel
+		// InheritProperties       RuiBindLabel
+		// xpos					6
+		// ypos                    -5
+		//
+		// pin_to_sibling			ButtonPrimary
+		// pin_corner_to_sibling	BOTTOM_LEFT
+		// pin_to_sibling_corner	BOTTOM_RIGHT
+		// }
+		// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		"SecondaryName"
+		{
+			"ControlName"				"RuiPanel"
+			"InheritProperties"			"RuiLoadoutLabel"
+			"ypos"						"17"
+			"pin_to_sibling"			"ButtonSecondary"
+			"pin_corner_to_sibling"		"BOTTOM"
+			"pin_to_sibling_corner"		"TOP"
+		}
+		"ButtonSecondary"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonLarge"
+			"classname"					"PilotLoadoutPanelButtonClass"
+			"scriptID"					"secondary"
+			"navUp"						"ButtonOrdnance"
+			"navDown"					"ButtonWeapon3"
+			"navLeft"					"ButtonSecondarySkin"
+			"navRight"					"ButtonSecondaryBuyAmmo"
+			"xpos"						"60"
+			"pin_to_sibling"			"ButtonPrimaryAmmo"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonSecondaryBG"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonLarge"
+			"rui"						"ui/control_options_description.rpak"
+			"zpos"						"-1"
+			"navDown"					"ButtonPrimary"
+			"navLeft"					"ButtonSuit"
+			"navRight"					"ButtonPilotCamo"
+			"pin_to_sibling"			"ButtonSecondary"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"ButtonSecondaryBuyAmmo"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_secondaryBuyAmmo"
+			"scriptID"					"secondaryBuyAmmo"
+			"classname"					"buyAmmo"
+			"xpos"						"6"
+			"wide"						"120"
+			"labelText"					"+"
+			"textAlignment"				"center"
+			"navUp"						"ButtonPrimary"
+			"navDown"					"ButtonWeapon3"
+			"navLeft"					"ButtonSecondary"
+			"navRight"					"ButtonSecondarySell"
+			"pin_to_sibling"			"ButtonSecondary"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonSecondaryBuyPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"buyPrice"
+			"font"						"Default_17"
+			"wide"						"120"
+			"xpos"						"6"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"-25$"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonSecondaryBuyAmmo"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonSecondaryAmmo"
+		{
+			"ControlName"				"Label"
+			"font"						"Default_44_DropShadow"
+			"xpos"						"6"
+			"InheritProperties"			"RuiSmallButton"
+			"labelText"					"80"
+			"textAlignment"				"center"
+			"wide"						"120"
+			"tall"						"120"
+			"pin_to_sibling"			"ButtonSecondary"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"RIGHT"
+		}
+		"ButtonSecondarySell"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_secondaryBuyAmmo HideWhenEditing_secondarySell"
+			"scriptID"					"secondarySell"
+			"xpos"						"0"
+			"classname"					"sellAmmo"
+			"wide"						"120"
+			"labelText"					"-"
+			"textAlignment"				"center"
+			"navUp"						"ButtonPrimary"
+			"navDown"					"ButtonWeapon3"
+			"navLeft"					"ButtonSecondaryBuyAmmo"
+			"pin_to_sibling"			"ButtonSecondary"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+		}
+		"ButtonSecondarySellPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"font"						"Default_17"
+			"xpos"						"6"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"+25$"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonSecondarySell"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		// ButtonSecondaryMod3
+		// {
+		// ControlName				RuiButton
+		// InheritProperties		LoadoutButtonSmall
+		// classname				"PilotLoadoutPanelButtonClass HideWhenEditing_secondaryBuyAmmo HideWhenEditing_secondarySell"
+		// scriptID				"secondaryMod3"
+		// xpos					6
+		// navUp					ButtonPrimary
+		// navDown                 ButtonWeapon3
+		// navLeft 				ButtonSecondarySell
+		// navRight 				ButtonSecondarySkin
+		// pin_to_sibling			ButtonSecondarySell
+		// pin_corner_to_sibling	TOP_LEFT
+		// pin_to_sibling_corner	TOP_RIGHT
+		// }
+		// ButtonSecondaryBuyAmmo
+		// {
+		// ControlName				RuiButton
+		// InheritProperties		CosmeticButton
+		// classname               "HideWhenEditing_secondarySell"
+		// scriptID				"secondaryCamoIndex"
+		// xpos					-560
+		// navUp					ButtonPrimarySkin
+		// navDown					ButtonWeapon3Skin
+		// navLeft                 ButtonSecondaryMod3
+		// navRight                ButtonSecondary
+		// pin_to_sibling			ButtonSecondary
+		// pin_corner_to_sibling	TOP_LEFT
+		// pin_to_sibling_corner	TOP_LEFT
+		// }
+		// SecondaryBind
+		// {
+		// ControlName				RuiPanel
+		// InheritProperties       RuiBindLabel
+		// xpos					6
+		// ypos                    -5
+		//
+		// pin_to_sibling			ButtonSecondary
+		// pin_corner_to_sibling	BOTTOM_LEFT
+		// pin_to_sibling_corner	BOTTOM_RIGHT
+		// }
+		// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		"Weapon3Name"
+		{
+			"ControlName"				"RuiPanel"
+			"InheritProperties"			"RuiLoadoutLabel"
+			"ypos"						"17"
+			"pin_to_sibling"			"ButtonWeapon3"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"ButtonWeapon3"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonLarge"
+			"classname"					"PilotLoadoutPanelButtonClass"
+			"scriptID"					"Weapon3"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"xpos"						"60"
+			"navLeft"					"ButtonWeapon3Skin"
+			"navRight"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonSecondaryAmmo"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonWeapon3BG"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"LoadoutButtonLarge"
+			"rui"						"ui/control_options_description.rpak"
+			"zpos"						"-1"
+			"navDown"					"ButtonPrimary"
+			"navLeft"					"ButtonSuit"
+			"navRight"					"ButtonPilotCamo"
+			"pin_to_sibling"			"ButtonWeapon3"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+		}
+		"ButtonWeapon3BuyAmmo"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo"
+			"scriptID"					"Weapon3"
+			"xpos"						"6"
+			"classname"					"buyAmmo"
+			"wide"						"120"
+			"labelText"					"+"
+			"textAlignment"				"center"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3"
+			"navRight"					"ButtonWeapon3Sell"
+			"pin_to_sibling"			"ButtonWeapon3"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonWeapon3BuyPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"buyPrice"
+			"font"						"Default_17"
+			"xpos"						"6"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"-25$"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonWeapon3BuyAmmo"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"ButtonWeapon3Ammo"
+		{
+			"ControlName"				"Label"
+			"font"						"Default_44_DropShadow"
+			"xpos"						"6"
+			"InheritProperties"			"RuiSmallButton"
+			"textAlignment"				"center"
+			"labelText"					"80"
+			"textAlignment"				"center"
+			"wide"						"120"
+			"tall"						"120"
+			"pin_to_sibling"			"ButtonWeapon3"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"RIGHT"
+		}
+		"ButtonWeapon3Sell"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"scriptID"					"Weapon3"
+			"classname"					"sellAmmo"
+			"xpos"						"6"
+			"wide"						"120"
+			"labelText"					"-"
+			"textAlignment"				"center"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonWeapon3"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+		}
+		"ButtonWeapon3SellPrice"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"font"						"Default_17"
+			"xpos"						"6"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"+25$"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"ButtonWeapon3Sell"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+		"BuyConsumable0"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"scriptID"					"Weapon3"
+			"classname"					"sellAmmo"
+			"xpos"						"-30"
+			"ypos"						"-50"
+			"labelText"					"Titan"
+			"font"						"Default_43"
+			"tall"						"53"	// 40 - 27 = 13 + 40 = 63
+			"textAlignment"				"center"
+			"wide"						"200"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"Background"
+			"pin_corner_to_sibling"		"TOP_RIGHT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+			"visible"					"0"
+		}
+		"BuyConsumable0Price"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"5000$"
+			"pin_to_sibling"			"BuyConsumable0"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+			"visible"					"0"
+		}
+		"BuyConsumable1"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"scriptID"					"Weapon3"
+			"classname"					"sellAmmo"
+			"ypos"						"40"
+			"labelText"					"Boost"
+			"font"						"Default_43"
+			"tall"						"53"	// 40 - 27 = 13 + 40 = 63
+			"textAlignment"				"center"
+			"wide"						"200"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"BuyConsumable0"
+			"pin_corner_to_sibling"		"TOP_RIGHT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+			"visible"					"0"
+		}
+		"BuyConsumable1Price"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"2000$"
+			"pin_to_sibling"			"BuyConsumable1"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+			"visible"					"0"
+		}
+		"BuyConsumable2"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"scriptID"					"Weapon3"
+			"classname"					"sellAmmo"
+			"ypos"						"40"
+			"labelText"					"Boost"
+			"font"						"Default_43"
+			"tall"						"53"	// 40 - 27 = 13 + 40 = 63
+			"textAlignment"				"center"
+			"wide"						"200"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"BuyConsumable1"
+			"pin_corner_to_sibling"		"TOP_RIGHT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+			"visible"					"0"
+		}
+		"BuyConsumable2Price"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"2000$"
+			"pin_to_sibling"			"BuyConsumable2"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+			"visible"					"0"
+		}
+		"BuyConsumable3"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"scriptID"					"Weapon3"
+			"classname"					"sellAmmo"
+			"ypos"						"40"
+			"labelText"					"Boost"
+			"font"						"Default_43"
+			"tall"						"53"	// 40 - 27 = 13 + 40 = 63
+			"textAlignment"				"center"
+			"wide"						"200"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"BuyConsumable2"
+			"pin_corner_to_sibling"		"TOP_RIGHT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+			"visible"					"0"
+		}
+		"BuyConsumable3Price"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"2000$"
+			"pin_to_sibling"			"BuyConsumable3"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+			"visible"					"0"
+		}
+		"BuyConsumable4"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"scriptID"					"Weapon3"
+			"classname"					"sellAmmo"
+			"ypos"						"40"
+			"labelText"					"Boost"
+			"font"						"Default_43"
+			"tall"						"53"	// 40 - 27 = 13 + 40 = 63
+			"textAlignment"				"center"
+			"wide"						"200"
+			"navUp"						"ButtonSecondary"
+			"navDown"					"ButtonKit1"
+			"navLeft"					"ButtonWeapon3BuyAmmo"
+			"pin_to_sibling"			"BuyConsumable3"
+			"pin_corner_to_sibling"		"TOP_RIGHT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+			"visible"					"0"
+		}
+		"BuyConsumable4Price"
+		{
+			"ControlName"				"Label"
+			"InheritProperties"			"RuiSmallButton"
+			"classname"					"PilotLoadoutPanelButtonClass HideWhenEditing_weapon3BuyAmmo HideWhenEditing_weapon3Sell"
+			"classname"					"sellPrice"
+			"wide"						"120"
+			"fgcolor_override"			"255 200 25 255"
+			"labelText"					"2000$"
+			"pin_to_sibling"			"BuyConsumable4"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
+			"visible"					"0"
+		}
+		"FooterButtons"
+		{
+			"ControlName"			"CNestedPanel"
+			"InheritProperties"		"FooterButtons"
+		}
+	}
+}

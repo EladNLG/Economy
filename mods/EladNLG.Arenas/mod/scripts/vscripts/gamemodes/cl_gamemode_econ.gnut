@@ -1,0 +1,97 @@
+global function ClGamemodeEcon_Init
+
+struct 
+{
+    var rui
+    var aspectRatioFixTopo
+} file
+
+const RUI_TEXT_CENTER = $"ui/cockpit_console_text_center.rpak"
+
+void function ClGamemodeEcon_Init()
+{
+    AddServerToClientStringCommandCallback( "econ_holoshiftactive", void function(array<string> args) : () {
+        RunUIScript( "Econ_SetHoloShiftActive", true )
+    })
+    float right = (GetScreenSize()[1] / 9.0) * 16.0
+	float down = GetScreenSize()[1]
+	float xOffset = (GetScreenSize()[0] - right) / 2
+	file.aspectRatioFixTopo = RuiTopology_CreatePlane( <xOffset, 0, 0>, <right, 0, 0>, <0, down, 0>, false )
+    
+    AddCallback_GameStateEnter( eGameState.Prematch, ClGamemodeEcon_OnEnterPrematch );
+    AddCallback_GameStateEnter( eGameState.Playing, ClGamemodeEcon_OnEnterPlaying );
+    CinematicIntroScreen_SetText(TEAM_IMC, ["Press %use% to buy weapons"])
+    AddServerToClientStringCommandCallback( "econ_custompurchase", Econ_NewPurchase )
+    CinematicIntroScreen_SetText(TEAM_MILITIA, ["Press %use% to buy weapons"])
+    if (GetGameState() == eGameState.Prematch)
+    {
+        RegisterConCommandTriggeredCallback( "+use", ClGamemodeEcon_OnUse );
+        var rui = RuiCreate( RUI_TEXT_CENTER, file.aspectRatioFixTopo, RUI_DRAW_HUD, 0 )
+		RuiSetInt( rui, "maxLines", 1 )
+		RuiSetInt( rui, "lineNum", 0 )
+		RuiSetFloat2( rui, "msgPos", <0.0, 0.74, 0> )
+		RuiSetFloat3( rui, "msgColor", <0.9, 0.9, 0.9> )
+		RuiSetString( rui, "msgText", "%use% buy menu" )
+		RuiSetFloat( rui, "msgFontSize", 48.0 )
+		RuiSetFloat( rui, "msgAlpha", 0.9 )
+		RuiSetFloat( rui, "thicken", 0.0 )
+        file.rui = rui
+    }
+    thread EconUI_SetClientWeapons_Update()
+}
+
+void function ClGamemodeEcon_OnEnterPrematch()
+{
+    try
+    {
+        RegisterConCommandTriggeredCallback( "+use", ClGamemodeEcon_OnUse );
+    }
+    catch (ex)
+    {
+        
+    }
+    var rui = RuiCreate( RUI_TEXT_CENTER, file.aspectRatioFixTopo, RUI_DRAW_HUD, 0 )
+    RuiSetInt( rui, "maxLines", 1 )
+    RuiSetInt( rui, "lineNum", 1 )
+    RuiSetFloat2( rui, "msgPos", <0.0, -0.25, 0> )
+    RuiSetFloat3( rui, "msgColor", <0.9, 0.9, 0.9> )
+    RuiSetString( rui, "msgText", "Press %use% to buy" )
+    RuiSetFloat( rui, "msgFontSize", 48.0 )
+    RuiSetFloat( rui, "msgAlpha", 0.9 )
+    RuiSetFloat( rui, "thicken", 0.0 )
+    RunUIScript( "Econ_ResetConsumables" )
+    file.rui = rui
+}
+
+void function ClGamemodeEcon_OnEnterPlaying()
+{
+    DeregisterConCommandTriggeredCallback( "+use", ClGamemodeEcon_OnUse );
+    RunUIScript( "Econ_CloseBuyMenu" )
+    
+    RuiDestroyIfAlive( file.rui )
+}
+
+void function ClGamemodeEcon_OnUse( entity player )
+{
+    RunUIScript( "Econ_OpenBuyMenu" )
+}
+
+void function Econ_NewPurchase(array<string> args)
+{
+    string id = args[0]
+    int price = args[1].tointeger()
+
+    string name = GetArgString( args.slice(2) )
+
+    RunUIScript( "Econ_NewPurchase", id, price, name )
+}
+
+string function GetArgString( array<string> args )
+{
+	string s = ""
+	for (int i = 0; i < args.len(); i++) {
+		s += args[i]
+		if (i < args.len() - 1) s += " "
+	}
+	return s
+}

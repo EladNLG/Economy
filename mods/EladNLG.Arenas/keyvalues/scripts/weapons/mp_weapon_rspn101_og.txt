@@ -1,0 +1,4 @@
+"#base"		"_econ_weapon.txt"
+"WeaponData"
+{
+}

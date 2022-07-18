@@ -1,0 +1,12 @@
+#base "_econ_ability.txt"
+"WeaponData"
+{   
+    Mods
+    {
+        econ
+        {
+            "grapple_power_required"						"25"
+            "grapple_power_use_rate"						"25"
+        }
+    }
+}

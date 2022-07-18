@@ -1,0 +1,12 @@
+"WeaponData"
+{
+	"Mods"
+	{
+		"econ"
+		{
+			"ammo_no_remove_from_stockpile"		"0"
+			"ammo_default_total"				"0"
+			"ammo_stockpile_max"				"999"
+		}
+	}
+}

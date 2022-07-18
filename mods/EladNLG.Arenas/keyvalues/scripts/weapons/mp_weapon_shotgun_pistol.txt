@@ -1,0 +1,5 @@
+#base "_econ_weapon.txt"
+"WeaponData"
+{
+	//"viewkick_ads_weaponFraction" 					"0.5"
+}

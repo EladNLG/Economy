@@ -1,0 +1,170 @@
+global function Sh_CreateGamemodeEcon_Init
+
+global function Econ_GetPriceOverrides
+global function Econ_AddPriceOverride
+global function Econ_RemovePriceOverride
+global function Econ_GetWeaponPrice
+global function Econ_GetWeaponAmmoPrice
+global function Econ_GetWeaponAmmoSize
+global function Econ_GetWeaponBaseAmmo
+global function Econ_PlayerHasEnoughMoney
+
+global const GAMEMODE_ECON = "econ"
+
+///////////////////////
+// GAMEMODE CREATION //
+///////////////////////
+
+
+
+void function Sh_CreateGamemodeEcon_Init()
+{
+    AddCallback_OnCustomGamemodesInit( CreateEconGamemode )
+}
+
+void function CreateEconGamemode()
+{
+    GameMode_Create( GAMEMODE_ECON )
+	GameMode_SetName( GAMEMODE_ECON, "Econ" )
+	GameMode_SetDesc( GAMEMODE_ECON, "Start with a P2016 and no abilities. Gain money to buy weapons and upgrades." )
+	GameMode_SetGameModeAnnouncement( GAMEMODE_ECON, "gnrc_modeDesc" )
+	GameMode_SetDefaultTimeLimits( GAMEMODE_ECON, 2, 0.0 )
+	GameMode_AddScoreboardColumnData( GAMEMODE_ECON, "Money", PGS_ASSAULT_SCORE, 5 )
+	GameMode_AddScoreboardColumnData( GAMEMODE_ECON, "$ At Start Of Round", PGS_DEFENSE_SCORE, 5 )
+	GameMode_AddScoreboardColumnData( GAMEMODE_ECON, "#SCOREBOARD_KILLS", PGS_KILLS, 2 )
+	GameMode_SetColor( GAMEMODE_ECON, [147, 204, 57, 255] )
+	
+	AddPrivateMatchMode( GAMEMODE_ECON )
+
+	array<string> weapons = [
+					"mp_weapon_rspn101", 	"mp_weapon_rspn101_og", 	"mp_weapon_hemlok", 		"mp_weapon_g2", 			"mp_weapon_vinson", 
+                    "mp_weapon_car", 		"mp_weapon_alternator_smg", "mp_weapon_hemlok_smg",		"mp_weapon_r97", 			"mp_weapon_lmg", 
+					"mp_weapon_lstar", 		"mp_weapon_esaw", 			"mp_weapon_sniper", 		"mp_weapon_doubletake", 	"mp_weapon_dmr",
+                    "mp_weapon_shotgun", 	"mp_weapon_mastiff", 		"mp_weapon_smr", 			"mp_weapon_epg", 			"mp_weapon_softball", 
+					"mp_weapon_pulse_lmg", 	"mp_weapon_wingman_n", 		"mp_weapon_shotgun_pistol", "mp_weapon_autopistol", 	"mp_weapon_semipistol", 
+					"mp_weapon_wingman", 	"mp_weapon_defender", 		"mp_weapon_mgl" 		] //"mp_weapon_arc_launcher" 	, 	"mp_weapon_peacekraber" ]
+
+	array<string> nades = [ "mp_weapon_frag_grenade", "mp_weapon_grenade_emp", "mp_weapon_thermite_grenade",	"mp_weapon_grenade_gravity", "mp_weapon_grenade_electric_smoke", "mp_weapon_satchel" ]
+	foreach (index, weapon in weapons)
+	{
+		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Prices", "econ_price_" + weapon.slice( 3, weapon.len() ).tostring(), Econ_GetWeaponPrice( weapon ).tostring() )
+		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Ammo Prices", "econ_price_" + weapon.slice( 3, weapon.len() ) + "_ammo", Econ_GetWeaponAmmoPrice( weapon ).tostring() )
+		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Base Reserves", "econ_" + weapon.slice( 3, weapon.len() ) + "_stockpile", Econ_GetWeaponBaseAmmo( weapon ).tostring() )
+		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Reserves Per Purchase", "econ_" + weapon.slice( 3, weapon.len() ) + "_ammo_size", Econ_GetWeaponAmmoSize( weapon ).tostring() )
+	}
+
+	//AddPrivateMatchModeSettingArbitrary( "#PL_econ", "econ_starting_money", "500" )
+
+	GameMode_SetDefaultScoreLimits( GAMEMODE_ECON, 5, 0)
+
+	#if SERVER
+		GameMode_AddServerInit( GAMEMODE_ECON, GamemodeEcon_Init )
+		GameMode_SetPilotSpawnpointsRatingFunc( GAMEMODE_ECON, RateSpawnpoints_Generic )
+		GameMode_SetTitanSpawnpointsRatingFunc( GAMEMODE_ECON, RateSpawnpoints_Generic )
+	#elseif CLIENT
+		GameMode_AddClientInit( GAMEMODE_ECON, ClGamemodeEcon_Init )
+		AddServerToClientStringCommandCallback( "econ_priceoverride", PriceOverride)
+	#endif
+	#if !UI
+		GameMode_SetScoreCompareFunc( GAMEMODE_ECON, CompareAssaultScore )
+		GameMode_AddSharedInit( GAMEMODE_ECON, Sh_GamemodeEcon_Init )
+	#endif
+}
+
+
+
+///////////////////////
+// GAMEMODE GAMEPLAY //
+///////////////////////
+
+
+
+void function Sh_GamemodeEcon_Init()
+{
+    AddCallback_OnCustomGamemodesInit( CreateEconGamemode )
+}
+
+#if CLIENT
+void function PriceOverride(array<string> args)
+{
+	print("PRICEOVERRIDE")
+	if (args.len() < 1)
+		return
+	print("PRICEOVERRIDE " + args[0])
+
+	string weapon = args[0]
+	if (args.len() >= 2)
+	{
+		print("PRICEOVERRIDE " + args[0] + " " + args[1])
+		int price = int( args[1] )
+		Econ_AddPriceOverride( weapon, price )
+	}
+	else Econ_RemovePriceOverride( weapon )
+}
+#endif
+
+////////////////////
+// UTIL FUNCTIONS //
+////////////////////
+
+table<string, int> priceOverrides
+
+table<string, int> function Econ_GetPriceOverrides()
+{
+	return priceOverrides
+}
+
+void function Econ_AddPriceOverride( string weapon, int price )
+{
+	priceOverrides[weapon] <- price 
+    #if SERVER
+    foreach (entity player in GetPlayerArray())
+        ServerToClientStringCommand(player, "econ_priceoverride " + weapon + " " + price)
+    #elseif CLIENT
+	print("Calling UI: " + weapon + " " + price)
+	RunUIScript("Econ_AddPriceOverride", weapon, price)
+	#endif
+}
+
+void function Econ_RemovePriceOverride( string weapon )
+{
+    delete priceOverrides[weapon]
+    #if SERVER
+    foreach (entity player in GetPlayerArray())
+        ServerToClientStringCommand(player, "econ_priceoverride " + weapon)
+    #elseif CLIENT
+	print("Calling UI: " + weapon)
+	RunUIScript("Econ_RemovePriceOverride", weapon)
+	#endif
+}
+
+int function Econ_GetWeaponPrice( string weapon )
+{
+	if (weapon in priceOverrides) return priceOverrides[weapon]
+    return GetCurrentPlaylistVarInt( "econ_price_" + weapon.slice( 3, weapon.len() ), -1 )
+}
+
+int function Econ_GetWeaponAmmoPrice( string weapon )
+{
+    return GetCurrentPlaylistVarInt( "econ_price_" + weapon.slice( 3, weapon.len() ) + "_ammo", -1 )
+}
+
+int function Econ_GetWeaponBaseAmmo( string weapon )
+{
+    return GetCurrentPlaylistVarInt( "econ_" + weapon.slice( 3, weapon.len() ) + "_stockpile", -1 )
+}
+
+int function Econ_GetWeaponAmmoSize( string weapon )
+{
+    return GetCurrentPlaylistVarInt( "econ_" + weapon.slice( 3, weapon.len() ) + "_ammo_size", -1 )
+}
+
+int function Econ_GetPlayerMoney( entity player )
+{
+    return player.GetPlayerGameStat( PGS_ASSAULT_SCORE )
+}
+
+bool function Econ_PlayerHasEnoughMoney( entity player, int money )
+{
+	return player.GetPlayerGameStat( PGS_ASSAULT_SCORE ) >= money
+}

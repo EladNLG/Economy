@@ -1,0 +1,13 @@
+"#base"		"_econ_weapon.txt"
+"WeaponData"
+{
+	"Mods"
+	{
+		"econ"
+		{
+            // maybe? 
+			//"damage_near_value"		"*1.75"
+			//"damage_far_value"		"*1.75"
+		}
+	}
+}

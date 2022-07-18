@@ -1,0 +1,17 @@
+"WeaponData"
+{
+	"Mods"
+	{
+		// each ability can be bought up to 4 times with no cooldown.
+		"econ"
+		{
+			"regen_ammo_refill_rate"			"*0.0"
+			"ammo_per_shot"						"1"
+			"ammo_min_to_fire"					"1"
+			"ammo_default_total"				"0"
+			"ammo_clip_size"					"4"
+			"ammo_drains_to_empty_on_fire"		"0"
+			"ammo_no_remove_from_clip"						"0"
+		}
+	}
+}

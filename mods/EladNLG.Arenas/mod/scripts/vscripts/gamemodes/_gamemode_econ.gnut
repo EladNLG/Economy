@@ -1,0 +1,644 @@
+global function GamemodeEcon_Init
+
+struct 
+{
+	int joinInProgressBonus = 150
+
+	vector imcSpawnLoc
+	vector militaSpawnLoc
+	
+	entity imcShield
+	entity militiaShield
+	table<entity, float> grapplePower
+	array<entity> domes
+	table< string, void functionref(entity) > customPurchaseCallbacks
+	table<string, int> customPrices
+	table<string, string> customPurchaseNames
+	array<string> customPurchases
+} file
+
+void function GamemodeEcon_Init()
+{
+	SetSpawnpointGamemodeOverride( TEAM_DEATHMATCH )
+	
+	#if HOLOSHIFT_ACTIVE
+	Econ_AddPriceOverride( "mp_ability_holopilot", GetCurrentPlaylistVarInt( "econ_price_ability_holoshift", 125) )
+	#endif
+	if (GetCurrentPlaylistVarInt( "Satchel", 0 ) != 0)
+		Econ_AddPriceOverride( "mp_weapon_satchel", GetCurrentPlaylistVarInt( "econ_price_weapon_phase_satchel", 350 ))
+
+
+	Econ_AddCustomPurchase( "armor", "x2 HP", 550, void function (entity player) : () {
+		player.SetMaxHealth( player.GetMaxHealth() * 2 )
+	} )
+
+	SetShouldUseRoundWinningKillReplay( true )
+	SetRoundBased( true )
+	SetRespawnsEnabled( false )
+	SetLoadoutGracePeriodEnabled( false ) // prevent modifying loadouts with grace period
+	Riff_ForceTitanAvailability( eTitanAvailability.Once )
+	//Riff_ForceBoostAvailability( eBoostAvailability.Disabled )
+	Riff_ForceSetEliminationMode( eEliminationMode.Pilots )
+	SetTimeoutWinnerDecisionFunc( int function () : (){
+		int militiaPanels
+		int imcPanels
+
+		foreach ( entity panel in GetPlayerArray_Alive() )
+		{
+			if ( panel.GetTeam() == TEAM_MILITIA )
+				militiaPanels++
+			else if ( panel.GetTeam() == TEAM_IMC )
+				imcPanels++
+		}
+
+		if ( militiaPanels > imcPanels )
+			return TEAM_MILITIA
+		else if ( imcPanels > militiaPanels )
+			return TEAM_IMC
+			
+		return TEAM_UNASSIGNED
+	} )
+
+	file.joinInProgressBonus = GetCurrentPlaylistVarInt( "econ_starting_money", 800 )
+	ClassicMP_SetCustomIntro( GameModeEcon_BuyPhaseSetup, 60.0 )
+	AddCallback_GameStateEnter( eGameState.WinnerDetermined, GameModeEcon_TransferWeapons )
+	AddCallback_OnPlayerRespawned( SetupEconLoadoutForPlayer )
+	AddClientCommandCallback( "buy", OnClientCommand_Buy )
+	AddClientCommandCallback( "sell", ClientCommand_Sell )
+	//Econ_AddCustomPurchase( "titan", "Titan", 5000, TitanBought )
+	//Econ_AddCustomPurchase( "boost", "Boost", 4000, BoostBought )
+	PlayerEarnMeter_SetEnabled( false )
+	AddDeathCallback( "player", void function ( entity victim, var damageInfo ) : () {
+		entity attacker = DamageInfo_GetAttacker( damageInfo )
+
+		if (!attacker.IsPlayer()) return
+		Econ_AddPlayerMoney( attacker, GetCurrentPlaylistVarInt( "econ_kill_reward", 75 ) )
+	})
+	AddCallback_EntitiesDidLoad( ChooseSpawnLocations )
+}
+
+void function TitanBought( entity player )
+{
+	thread CreateTitanForPlayerAndHotdrop( player, GetTitanReplacementPoint( player, false ) )
+}
+void function BoostBought( entity player )
+{
+	string curRef = GetSelectedBurnCardRef( player )
+	BurnMeter_GiveRewardDirect( player, curRef )
+	while (expect float( GetServerVar( "gameStartTime" ) ) > Time())
+	{
+		string boostRef = GetSelectedBurnCardRef( player )
+		if (boostRef != curRef)
+		{
+			curRef = boostRef
+			PlayerInventory_PopInventoryItem( player )
+			BurnMeter_GiveRewardDirect( player, boostRef )
+		}
+		WaitFrame()
+	}
+
+
+}
+
+void function Econ_AddCustomPurchase( string id, string name, int price, void functionref( entity ) callback )
+{
+	file.customPurchaseCallbacks[id] <- callback
+	file.customPrices[id] <- price
+	file.customPurchaseNames[id] <- name
+	file.customPurchases.append(id)
+}
+
+void function GameModeEcon_TransferWeapons()
+{
+	foreach ( player in GetPlayerArray() )
+	{
+		if (!(player in file.grapplePower))
+		{
+			file.grapplePower[player] <- player.GetSuitGrapplePower()
+		}
+		else file.grapplePower[player] = player.GetSuitGrapplePower()
+		foreach (entity weapon in player.GetMainWeapons() )
+		{
+			if (weapon.GetLifetimeShotsRemaining() != -1)
+				weapon.SetWeaponPrimaryAmmoCount( weapon.GetLifetimeShotsRemaining() )
+		}
+		Econ_AddPlayerMoney( player, GetCurrentPlaylistVarInt( "econ_base_round_reward", 300 ) + ( GetCurrentPlaylistVarInt( "econ_round_reward_bonus_per_round", 25 ) * GetRoundsPlayed() ) )
+		if (player.GetTeam() == level.nv.winningTeam) Econ_AddPlayerMoney( player, GetCurrentPlaylistVarInt( "econ_base_win_reward", 50 ) )
+		if (IsAlive( player )) StorePilotWeapons( player )
+		player.SetPlayerGameStat( PGS_DEFENSE_SCORE, player.GetPlayerGameStat( PGS_ASSAULT_SCORE ) )
+	}
+	file.joinInProgressBonus += GetCurrentPlaylistVarInt( "econ_base_round_reward", 300 )
+	ClassicMP_SetCustomIntro( GameModeEcon_BuyPhaseSetup, 35.0 )
+}
+
+// SPAWN LOCATIONS
+void function ChooseSpawnLocations()
+{
+	array<entity> startspawns = GetEntArrayByClass_Expensive( "info_spawnpoint_human_start" ) // easier to do this than use a spawn callback imo
+	
+	vector imcAverageOrigin
+	float imcAverageAngle
+	int imcNumSpawns
+	
+	vector militiaAverageOrigin
+	float militiaAverageAngle
+	int militiaNumSpawns
+	
+	foreach ( entity startspawn in startspawns )
+	{
+		if ( !startspawn.HasKey( "gamemode_tdm" ) || startspawn.kv.gamemode_tdm == "0" )
+			continue
+	
+		if ( startspawn.GetTeam() == TEAM_IMC )
+		{
+			imcAverageOrigin += startspawn.GetOrigin()
+			imcAverageAngle += startspawn.GetAngles().y
+			imcNumSpawns++
+		}
+		else
+		{
+			militiaAverageOrigin += startspawn.GetOrigin()
+			militiaAverageAngle += startspawn.GetAngles().y
+			militiaNumSpawns++
+		}
+	}
+	
+	// create imc boost store 
+	vector finalPositionImc = < imcAverageOrigin.x / imcNumSpawns, imcAverageOrigin.y / imcNumSpawns, imcAverageOrigin.z / imcNumSpawns >
+	finalPositionImc += ( 200 * AnglesToForward( < 0, imcAverageAngle / imcNumSpawns, 0 > ) )
+	print("FINAL LOCTION 1:" + finalPositionImc)
+	file.imcSpawnLoc = finalPositionImc
+	
+	vector finalPositionMilitia = < militiaAverageOrigin.x / militiaNumSpawns, militiaAverageOrigin.y / militiaNumSpawns, militiaAverageOrigin.z / militiaNumSpawns >
+	finalPositionMilitia += ( 200 * AnglesToForward( < 0, militiaAverageAngle / militiaNumSpawns, 0 > ) )
+	file.militaSpawnLoc = finalPositionMilitia
+	
+	// createbooststorelocation is void so have to do this 
+	// also boost store code is just fully fucked lol, teams only get set on open so can't compare teams at this point
+	// sorry if someone else makes their own boost stores lol this'll just break
+	// if there's some way to get the invisible crates used for boost stores i will be very happy
+
+}
+
+bool function OnClientCommand_Buy( entity player, array<string> args )
+{
+	if ( args.len() < 1 )
+		return true
+	print("buy " + args[0])
+	if (GetGameState() >= eGameState.Playing)
+		return false
+
+	string weapon = args[0]
+	int slot = -1 
+	if (args.len() > 1) slot = int( args[1] )
+
+	if (file.customPurchases.contains(weapon))
+	{
+		if (Econ_PlayerHasEnoughMoney( player, file.customPrices[weapon] ) )
+		{
+			Econ_TakePlayerMoney( player, file.customPrices[weapon] )
+			thread file.customPurchaseCallbacks[weapon]( player )
+		}
+	}
+
+	print("Valid weapon")
+	if ( !IsValidEconWeapon( weapon ) )
+		return true
+	print("Valid weapon")
+
+	entity weaponEnt = FindWeaponOnPlayer( player, weapon )
+
+	if (!IsValid(weaponEnt))
+	{
+		switch (slot)
+		{
+			case 0:
+			case 1:
+			case 2:
+				if (player.GetMainWeapons().len() > slot)
+					SellWeapon(player, player.GetMainWeapons()[slot])
+				break
+			case 3:
+				if (IsValid(player.GetOffhandWeapon(1)))
+					SellWeapon(player, player.GetOffhandWeapon(1))
+				break
+			case 4:
+				if (IsValid(player.GetOffhandWeapon(0)))
+					SellWeapon(player, player.GetOffhandWeapon(0))
+				break
+		}
+		int price = Econ_GetWeaponPrice( weapon )
+		print(price)
+		if (price > 0)
+		{
+			if ( Econ_PlayerHasEnoughMoney( player, price ) )
+			{
+				print("player has money")
+				if ( GetWeaponInfoFileKeyField_GlobalInt( weapon, "offhand_default_inventory_slot" ) > 0 || GetWeaponMods_Global( weapon ).contains( "pas_ordnance_pack" ) )
+				{
+					int offhandSlot = GetWeaponInfoFileKeyField_GlobalInt( weapon, "offhand_default_inventory_slot" )
+					print(offhandSlot)
+					if ( !IsValid( player.GetOffhandWeapon(offhandSlot) ) )
+					{
+						Econ_TakePlayerMoney( player, price )
+						player.GiveOffhandWeapon( weapon, offhandSlot, [ "econ" ] )
+						weaponEnt = player.GetOffhandWeapon(offhandSlot)
+						weaponEnt.SetWeaponPrimaryClipCount( 1 )
+						weaponEnt.SetWeaponPrimaryAmmoCount( Econ_GetWeaponBaseAmmo( weapon ) )
+						if (weapon == "mp_ability_grapple")
+							player.SetSuitGrapplePower(25)
+					}
+					
+				}
+				else if (player.GetMainWeapons().len() < 3)
+				{
+					Econ_TakePlayerMoney( player, price )
+					weaponEnt = player.GiveWeapon( weapon, [ "econ" ] )
+					if (weaponEnt.GetWeaponSettingInt( eWeaponVar.ammo_clip_size ) > 0)
+						weaponEnt.SetWeaponPrimaryClipCount( weaponEnt.GetWeaponPrimaryClipCountMax() )
+					if (weaponEnt.GetLifetimeShotsRemaining() == -1)
+						weaponEnt.SetWeaponPrimaryAmmoCount( Econ_GetWeaponBaseAmmo( weapon ) )
+					else weaponEnt.SetLifetimeShotsRemaining( Econ_GetWeaponBaseAmmo( weapon ) )
+					player.SetActiveWeaponByName( weapon )
+				}
+			}
+		}
+		else
+		{
+			print("weapon is free")
+			weaponEnt = player.GiveWeapon( weapon, [ "econ" ] )
+			weaponEnt.SetWeaponPrimaryClipCount( weaponEnt.GetWeaponPrimaryClipCountMax() )
+			weaponEnt.SetWeaponPrimaryAmmoCount( Econ_GetWeaponBaseAmmo( weapon ) )
+
+			player.SetActiveWeaponByName( weapon)
+		}
+	}
+	else
+	{
+		int price = Econ_GetWeaponAmmoPrice( weapon )
+
+		if ( price > 0 )
+		{
+			if ( Econ_PlayerHasEnoughMoney( player, price ) )
+			{
+				Econ_TakePlayerMoney( player, price )
+				if ( GetWeaponInfoFileKeyField_GlobalInt( weapon, "offhand_default_inventory_slot" ) > 0 || GetWeaponMods_Global( weapon ).contains( "pas_ordnance_pack" ) )
+				{
+					weaponEnt.SetWeaponPrimaryClipCount( weaponEnt.GetWeaponPrimaryClipCount() + 1 )
+				}
+				else
+				{
+					if (weaponEnt.GetLifetimeShotsRemaining() == -1)
+						weaponEnt.SetWeaponPrimaryAmmoCount( weaponEnt.GetWeaponPrimaryAmmoCount() + Econ_GetWeaponAmmoSize( weapon ) )
+					else weaponEnt.SetLifetimeShotsRemaining( weaponEnt.GetLifetimeShotsRemaining() + Econ_GetWeaponBaseAmmo( weapon ) )
+				}
+			}
+		}
+		else
+		{
+			if ( GetWeaponInfoFileKeyField_GlobalInt( weapon, "offhand_default_inventory_slot" ) > 0 || GetWeaponMods_Global( weapon ).contains( "pas_ordnance_pack" ) )
+			{
+				print("charging for ability...")
+				price = Econ_GetWeaponPrice( weapon )
+				int ammo = weaponEnt.GetWeaponPrimaryClipCount()
+				if (weapon == "mp_ability_grapple")
+					ammo = int(player.GetSuitGrapplePower()) / 25
+				if (Econ_PlayerHasEnoughMoney( player, price ) && ammo < 4)
+				{
+					print("ok!")
+					Econ_TakePlayerMoney( player, price )
+					if (weapon != "mp_ability_grapple") weaponEnt.SetWeaponPrimaryClipCount( weaponEnt.GetWeaponPrimaryClipCount() + 1 )
+					else player.SetSuitGrapplePower( player.GetSuitGrapplePower() + 25 )
+				}
+			}
+			else
+			{
+				weaponEnt.SetWeaponPrimaryAmmoCount( weaponEnt.GetWeaponPrimaryAmmoCount() + Econ_GetWeaponAmmoSize( weapon ) )
+			}
+		}
+	}
+
+	return true
+}
+
+bool function ClientCommand_Sell( entity player, array<string> args )
+{
+	if (GetGameState() >= eGameState.Playing)
+		return false
+	if (args.len() < 1)
+		return true
+
+	string w = args[0]
+
+	if ( !IsValidEconWeapon( w ) )
+		return true
+	
+	entity weapon = FindWeaponOnPlayer( player, w )
+
+	if (!IsValid(weapon))
+		return true
+
+	if (weapon.IsWeaponOffhand())
+	{
+		if (w == "mp_ability_grapple") {
+			float grapplePower = min( player.GetSuitGrapplePower(), 25 ) / 25.0
+			player.SetSuitGrapplePower( player.GetSuitGrapplePower() - 25 )
+			if (player.GetSuitGrapplePower() <= 0)
+				player.TakeWeapon( w )
+
+			int money = int(grapplePower) * Econ_GetWeaponPrice( w )
+
+			Econ_AddPlayerMoney( player, money )
+		}
+		else {
+			weapon.SetWeaponPrimaryClipCount( weapon.GetWeaponPrimaryClipCount() - 1 )
+			if (weapon.GetWeaponPrimaryClipCount() <= 0)
+				player.TakeWeapon( w )
+			Econ_AddPlayerMoney( player, Econ_GetWeaponPrice( w ) )
+		}
+	}
+	else
+	{
+		int ammo = weapon.GetWeaponPrimaryAmmoCount()
+		if (weapon.GetLifetimeShotsRemaining() != -1)
+			ammo = weapon.GetLifetimeShotsRemaining()
+		if (ammo > Econ_GetWeaponBaseAmmo( w ))
+		{
+			int ammoTaken = int( min( Econ_GetWeaponAmmoSize( w ), ammo - Econ_GetWeaponBaseAmmo( w ) ) )
+			float ammoFrac = ammoTaken / float( Econ_GetWeaponAmmoSize( w ) )
+			int money = int( ammoFrac * Econ_GetWeaponAmmoPrice( w ) )
+			Econ_AddPlayerMoney( player, money )
+			if (weapon.GetLifetimeShotsRemaining() != -1)
+				weapon.SetLifetimeShotsRemaining( ammo - ammoTaken )
+			else weapon.SetWeaponPrimaryAmmoCount( ammo - ammoTaken )
+		}
+		else
+		{
+			player.TakeWeapon( w )
+			Econ_AddPlayerMoney( player, Econ_GetWeaponPrice( w ) )
+		}
+	}
+	return true
+}
+
+void function SellWeapon(entity player, entity weapon)
+{
+	string w = weapon.GetWeaponClassName()
+	while (true)
+	{
+		if (weapon.IsWeaponOffhand())
+		{
+			if (w == "mp_ability_grapple") {
+				float grapplePower = min( player.GetSuitGrapplePower(), 25 ) / 25.0
+				player.SetSuitGrapplePower( player.GetSuitGrapplePower() - 25 )
+
+				int money = int(grapplePower) * Econ_GetWeaponPrice( w )
+				Econ_AddPlayerMoney( player, money )
+
+				if (player.GetSuitGrapplePower() <= 0)
+				{
+					player.TakeWeaponNow( w )
+					break
+				}
+			}
+			else {
+				weapon.SetWeaponPrimaryClipCount( weapon.GetWeaponPrimaryClipCount() - 1 )
+				Econ_AddPlayerMoney( player, Econ_GetWeaponPrice( w ) )
+				if (weapon.GetWeaponPrimaryClipCount() <= 0)
+				{
+					player.TakeWeaponNow( w )
+					break
+				}
+			}
+		}
+		else
+		{
+			int ammo = weapon.GetWeaponPrimaryAmmoCount()
+			if (weapon.GetLifetimeShotsRemaining() != -1)
+				ammo = weapon.GetLifetimeShotsRemaining()
+			if (ammo > Econ_GetWeaponBaseAmmo( w ))
+			{
+				int ammoTaken = int( min( Econ_GetWeaponAmmoSize( w ), ammo - Econ_GetWeaponBaseAmmo( w ) ) )
+				float ammoFrac = ammoTaken / float( Econ_GetWeaponAmmoSize( w ) )
+				int money = int( ammoFrac * Econ_GetWeaponAmmoPrice( w ) )
+				Econ_AddPlayerMoney( player, money )
+				if (weapon.GetLifetimeShotsRemaining() != -1)
+					weapon.SetLifetimeShotsRemaining( ammo - ammoTaken )
+				else weapon.SetWeaponPrimaryAmmoCount( ammo - ammoTaken )
+			}
+			else
+			{
+				player.TakeWeaponNow( w )
+				Econ_AddPlayerMoney( player, Econ_GetWeaponPrice( w ) )
+				break
+			}
+		}
+	}
+}
+
+entity function FindWeaponOnPlayer( entity player, string weapon )
+{
+	array<entity> weapons = player.GetMainWeapons()
+	weapons.extend( player.GetOffhandWeapons() )
+
+	foreach ( w in weapons )
+	{
+		if (w.GetWeaponClassName() == weapon)
+			return w
+	}
+	return null
+} 
+
+bool function IsValidEconWeapon( string weapon )
+{
+	return Econ_GetWeaponPrice( weapon ) != -1
+}
+
+void function GameModeEcon_BuyPhaseSetup()
+{
+	AddCallback_OnClientConnected( SpawnPlayerIntoEconIntro )
+	AddCallback_GameStateEnter( eGameState.Prematch, void function() { thread BuyPhase() } )
+}
+
+void function SpawnPlayerIntoEconIntro( entity player )
+{
+	if ( GetGameState() == eGameState.Prematch )
+	{
+		RespawnAsPilot( player )
+		//entity militiaShield = CreateEntity( "prop_dynamic" )
+		//militiaShield.SetValueForModelKey( $"models/fx/xo_shield.mdl" )
+		//militiaShield.kv.solid = 6
+		//militiaShield.kv.modelscale = 1
+		//militiaShield.SetOrigin( player.GetOrigin() )
+		//DispatchSpawn( militiaShield )
+		//file.domes.append( militiaShield )
+		player.FreezeControlsOnServer()
+		
+		string startingWeapon = GetCurrentPlaylistVarString( "econ_starting_weapon", "mp_weapon_wingman" )
+		if (IsValidEconWeapon(startingWeapon))
+		{
+			entity weapon = player.GiveWeapon( startingWeapon, [ "econ" ] )
+			weapon.SetWeaponPrimaryClipCount( weapon.GetWeaponPrimaryClipCountMax() )
+			weapon.SetWeaponPrimaryAmmoCount( Econ_GetWeaponBaseAmmo( startingWeapon ) )
+		}
+	}
+	foreach (string id in file.customPurchases)
+	{
+		ServerToClientStringCommand( player, "econ_custompurchase " + id + " " + file.customPrices[id] + " " + file.customPurchaseNames[id] )
+	}
+	foreach (string weapon, int price in Econ_GetPriceOverrides())
+	{
+		ServerToClientStringCommand( player, "econ_priceoverride " + weapon + " " + price )
+	}
+	#if HOLOSHIFT_ACTIVE
+	ServerToClientStringCommand( player, "econ_holoshiftactive")
+	#endif
+	Econ_AddPlayerMoney( player, file.joinInProgressBonus )
+	player.SetPlayerGameStat( PGS_DEFENSE_SCORE, player.GetPlayerGameStat( PGS_ASSAULT_SCORE ) )
+}
+
+void function SetupEconLoadoutForPlayer( entity player )
+{
+	PilotLoadoutDef playerLoadout = clone GetActivePilotLoadout( player )
+
+	if ( GetGameState() == eGameState.Prematch ) // buy phase
+	{
+		playerLoadout.primary = ""
+		playerLoadout.primaryMods = []
+		playerLoadout.secondary = ""
+		playerLoadout.secondaryMods = []
+		playerLoadout.weapon3 = ""
+		playerLoadout.weapon3Mods = []
+		playerLoadout.ordnance = ""
+		playerLoadout.special = ""
+	}
+	
+	GivePilotLoadout( player, playerLoadout )
+	
+	thread OnPlayerRespawned_Threaded( player )
+}
+
+void function OnPlayerRespawned_Threaded( entity player )
+{
+	// bit of a hack, need to rework earnmeter code to have better support for completely disabling it
+	// rn though this just waits for earnmeter code to set the mode before we set it back
+	WaitFrame()
+	if ( IsValid( player ) )
+		PlayerEarnMeter_SetMode( player, eEarnMeterMode.DISABLED )
+}
+
+void function BuyPhase()
+{
+	ClassicMP_OnIntroStarted()
+
+	foreach ( entity player in GetPlayerArray() )
+	{
+		ScreenFadeFromBlack( player )
+		RespawnAsPilot( player )
+		//entity militiaShield = CreateEntity( "prop_dynamic" )
+		//militiaShield.SetValueForModelKey( $"models/fx/xo_shield.mdl" )
+		//militiaShield.kv.solid = 6
+		//militiaShield.kv.modelscale = 1
+		//militiaShield.SetOrigin( player.GetOrigin() )
+		//DispatchSpawn( militiaShield )
+		//file.domes.append( militiaShield )
+		player.FreezeControlsOnServer()
+
+		print("FINAL LOCTION 1:" + file.imcSpawnLoc)
+		print("FINAL LOCTION 2:" + file.militaSpawnLoc)
+		//player.SetOrigin( (player.GetTeam() == TEAM_IMC ? file.imcSpawnLoc : file.militaSpawnLoc) + < 0,0, 100> )
+		
+		RetrievePilotWeapons( player )
+
+		foreach (entity weapon in player.GetMainWeapons())
+		{
+			weapon.SetWeaponPrimaryClipCount( weapon.GetWeaponPrimaryClipCountMax() )
+			if (weapon.GetLifetimeShotsRemaining() != -1)
+				weapon.SetLifetimeShotsRemaining( int( max( Econ_GetWeaponBaseAmmo( weapon.GetWeaponClassName() ), weapon.GetWeaponPrimaryAmmoCount() ) ) )
+			weapon.SetWeaponPrimaryAmmoCount( int( max( Econ_GetWeaponBaseAmmo( weapon.GetWeaponClassName() ), weapon.GetWeaponPrimaryAmmoCount() ) ) )
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			entity weapon = player.GetOffhandWeapon(i)
+			if (IsValid(weapon))
+			{
+				if (weapon.GetWeaponPrimaryClipCount() < weapon.GetWeaponSettingInt( eWeaponVar.ammo_min_to_fire ))
+					player.TakeOffhandWeapon(i)
+
+				if (weapon.GetWeaponClassName() == "mp_ability_grapple")
+				{
+					player.SetSuitGrapplePower(file.grapplePower[player])
+					if (player.GetSuitGrapplePower() < 25)
+						player.TakeOffhandWeapon(i)
+				}
+			}
+		}
+		if (player.GetMainWeapons().len() <= 0)
+		{
+			string startingWeapon = GetCurrentPlaylistVarString( "econ_starting_weapon", "mp_weapon_wingman" )
+			if (IsValidEconWeapon(startingWeapon))
+			{
+				entity weapon = player.GiveWeapon( startingWeapon, [ "econ" ] )
+				weapon.SetWeaponPrimaryClipCount( weapon.GetWeaponPrimaryClipCountMax() )
+				weapon.SetWeaponPrimaryAmmoCount( Econ_GetWeaponBaseAmmo( startingWeapon ) )
+			}
+		}
+
+		array<string> mods = player.GetPlayerSettingsMods()
+		mods.append( "econ" )
+		player.SetPlayerSettingsWithMods( player.GetPlayerSettings(), mods )
+	}
+			
+	// current problem, there is seemingly no way of getting a shield we can resize which actually resizes the collision
+	// could probably just damage players that try to leave lol
+	
+	
+	wait ClassicMP_GetIntroLength() // intro length
+	
+	foreach (entity player in GetPlayerArray())
+	{
+		player.UnfreezeControlsOnServer()
+	}
+	//file.domes.clear()
+	
+	foreach ( entity player in GetPlayerArray() )
+		if ( player.GetMainWeapons().len() <= 0 )
+		{
+			string startingWeapon = GetCurrentPlaylistVarString( "econ_starting_weapon", "mp_weapon_wingman" )
+			if (!IsValidEconWeapon(startingWeapon))
+				break
+			entity weapon = player.GiveWeapon( startingWeapon, [ "econ" ] )
+			weapon.SetWeaponPrimaryClipCount( weapon.GetWeaponPrimaryClipCountMax() )
+			weapon.SetWeaponPrimaryAmmoCount( Econ_GetWeaponBaseAmmo( startingWeapon ) )
+		}
+	
+	ClassicMP_OnIntroFinished()
+}
+
+void function DamageLeavingPlayers( vector imcOrigin, vector militiaOrigin )
+{
+	while ( GetGameState() == eGameState.Prematch )
+	{
+		wait 0.5
+		foreach ( entity player in GetPlayerArray() )
+		{
+			vector pos = imcOrigin
+			if ( player.GetTeam() == TEAM_MILITIA )
+				pos = militiaOrigin
+			
+			if ( Distance( player.GetOrigin(), pos ) > 680.0 ) // roughly the size of the shield
+				player.TakeDamage( 5, svGlobal.worldspawn, svGlobal.worldspawn, { origin = pos } )
+		}
+	}
+}
+
+void function Econ_AddPlayerMoney( entity player, int money )
+{
+	player.SetPlayerGameStat( PGS_ASSAULT_SCORE, player.GetPlayerGameStat( PGS_ASSAULT_SCORE ) + money )
+}
+
+void function Econ_TakePlayerMoney( entity player, int money )
+{
+	player.SetPlayerGameStat( PGS_ASSAULT_SCORE, player.GetPlayerGameStat( PGS_ASSAULT_SCORE ) - money )
+}

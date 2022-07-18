@@ -1,0 +1,5 @@
+#base "_econ_weapon.txt"
+"WeaponData"
+{
+	"ui1_enable"		"0"
+}

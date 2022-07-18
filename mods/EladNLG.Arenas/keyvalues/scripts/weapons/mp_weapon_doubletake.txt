@@ -1,0 +1,6 @@
+#base "_econ_weapon.txt"
+"WeaponData"
+{
+	"viewmodel_offset_ads"							"0 0 0"
+    "ui4_enable"                    "0"
+}

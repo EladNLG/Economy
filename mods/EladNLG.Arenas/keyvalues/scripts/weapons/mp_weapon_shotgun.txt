@@ -1,0 +1,15 @@
+#base "_econ_weapon.txt"
+"WeaponData"
+{
+    MP_BASE
+    {
+		// Spread
+    }
+    RUI_CrosshairData
+    {
+        Crosshair_1
+        {
+			"base_spread"				"0.0"
+        }
+    }
+}

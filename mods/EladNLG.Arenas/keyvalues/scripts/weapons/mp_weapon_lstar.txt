@@ -1,0 +1,13 @@
+"#base"		"_econ_weapon.txt"
+"WeaponData"
+{
+	"Mods"
+	{
+		"econ"
+		{
+			"ammo_no_remove_from_stockpile"		"1"
+			"ammo_default_total"				"35"
+			"lifetime_shots_default"			"70"
+		}
+	}
+}

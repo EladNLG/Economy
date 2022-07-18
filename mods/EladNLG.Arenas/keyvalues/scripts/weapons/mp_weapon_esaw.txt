@@ -1,0 +1,11 @@
+#base "_econ_weapon.txt"
+"WeaponData"
+{
+    RUI_CrosshairData
+    {
+        Crosshair_1
+        {
+			"ui"						"ui/crosshair_wingman"
+        }
+    }
+}

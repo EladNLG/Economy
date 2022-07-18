@@ -1,0 +1,19 @@
+WeaponSprings
+{
+    vinson
+	{
+		"hipfire_pitch_springConstant"	"0.0"
+		"hipfire_pitch_damping"			"10.0"
+		"hipfire_yaw_springConstant"	"0.0"
+		"hipfire_yaw_damping"			"7.0"
+		"hipfire_roll_springConstant"	"00.0"
+		"hipfire_roll_damping"			"15.0"
+
+		"ADS_pitch_springConstant"		"0.0"
+		"ADS_pitch_damping"				"20.0"
+		"ADS_yaw_springConstant"		"0.0"
+		"ADS_yaw_damping"				"20.0"
+		"ADS_roll_springConstant"		"0.0"
+		"ADS_roll_damping"				"20.0"
+	}
+}
