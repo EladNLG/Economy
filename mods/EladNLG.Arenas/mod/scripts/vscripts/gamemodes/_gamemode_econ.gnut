@@ -40,8 +40,8 @@ void function GamemodeEcon_Init()
 	//Riff_ForceBoostAvailability( eBoostAvailability.Disabled )
 	Riff_ForceSetEliminationMode( eEliminationMode.Pilots )
 	SetTimeoutWinnerDecisionFunc( int function () : (){
-		int militiaPanels
-		int imcPanels
+		int militiaPanels = 0
+		int imcPanels = 0
 
 		foreach ( entity panel in GetPlayerArray_Alive() )
 		{

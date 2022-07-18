@@ -47,13 +47,13 @@ void function CreateEconGamemode()
 	array<string> nades = [ "mp_weapon_frag_grenade", "mp_weapon_grenade_emp", "mp_weapon_thermite_grenade",	"mp_weapon_grenade_gravity", "mp_weapon_grenade_electric_smoke", "mp_weapon_satchel" ]
 	foreach (index, weapon in weapons)
 	{
-		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Prices", "econ_price_" + weapon.slice( 3, weapon.len() ).tostring(), Econ_GetWeaponPrice( weapon ).tostring() )
-		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Ammo Prices", "econ_price_" + weapon.slice( 3, weapon.len() ) + "_ammo", Econ_GetWeaponAmmoPrice( weapon ).tostring() )
-		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Base Reserves", "econ_" + weapon.slice( 3, weapon.len() ) + "_stockpile", Econ_GetWeaponBaseAmmo( weapon ).tostring() )
-		//AddPrivateMatchModeSettingArbitrary( "Econ Gun Reserves Per Purchase", "econ_" + weapon.slice( 3, weapon.len() ) + "_ammo_size", Econ_GetWeaponAmmoSize( weapon ).tostring() )
+		AddPrivateMatchModeSettingArbitrary( "Econ Gun Prices", "econ_price_" + weapon.slice( 3, weapon.len() ).tostring(), Econ_GetWeaponPrice( weapon ).tostring() )
+		AddPrivateMatchModeSettingArbitrary( "Econ Gun Ammo Prices", "econ_price_" + weapon.slice( 3, weapon.len() ) + "_ammo", Econ_GetWeaponAmmoPrice( weapon ).tostring() )
+		AddPrivateMatchModeSettingArbitrary( "Econ Gun Base Reserves", "econ_" + weapon.slice( 3, weapon.len() ) + "_stockpile", Econ_GetWeaponBaseAmmo( weapon ).tostring() )
+		AddPrivateMatchModeSettingArbitrary( "Econ Gun Reserves Per Purchase", "econ_" + weapon.slice( 3, weapon.len() ) + "_ammo_size", Econ_GetWeaponAmmoSize( weapon ).tostring() )
 	}
 
-	//AddPrivateMatchModeSettingArbitrary( "#PL_econ", "econ_starting_money", "500" )
+	AddPrivateMatchModeSettingArbitrary( "#PL_econ", "econ_starting_money", "500" )
 
 	GameMode_SetDefaultScoreLimits( GAMEMODE_ECON, 5, 0)
 

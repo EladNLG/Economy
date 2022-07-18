@@ -65,10 +65,16 @@ void function ClGamemodeEcon_OnEnterPrematch()
 
 void function ClGamemodeEcon_OnEnterPlaying()
 {
-    DeregisterConCommandTriggeredCallback( "+use", ClGamemodeEcon_OnUse );
+    try
+    {
+        DeregisterConCommandTriggeredCallback( "+use", ClGamemodeEcon_OnUse );
+        RuiDestroyIfAlive( file.rui )
+    }
+    catch (ex)
+    {
+        
+    }
     RunUIScript( "Econ_CloseBuyMenu" )
-    
-    RuiDestroyIfAlive( file.rui )
 }
 
 void function ClGamemodeEcon_OnUse( entity player )
