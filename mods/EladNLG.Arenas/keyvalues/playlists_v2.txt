@@ -7,11 +7,11 @@
 			"inherit"		"defaults"
 			"vars"
 			{
-				"name"											"Econ"
-				"lobbytitle"									"Econ Lobby"
-				"description"									"Start with a P2016 and no abilities. Gain money to buy weapons and upgrades."
-				"hint"											"Start with a P2016 and no abilities. Gain money to buy weapons and upgrades."
-				"abbreviation"									"ECON"
+				"name"											"#PL_econ"
+				"lobbytitle"									"#PL_econ_lobby"
+				"description"									"#PL_econ_desc"
+				"hint"											"#PL_econ_hint"
+				"abbreviation"									"#PL_econ_abbr"
 				"max_players"									"16"
 				"max_teams"										"2"
 				"classic_mp"									"1"
@@ -51,7 +51,7 @@
 				
 				"econ_price_weapon_satchel"						"225" 	// so are satchel and phase satchel.
 				"econ_price_weapon_phase_satchel"				"350"
-				
+
 				"econ_price_weapon_thermite_grenade"			"200"
 				"econ_price_weapon_grenade_electric_smoke"		"150"
 
@@ -242,14 +242,11 @@
 			"inherit"		"defaults"
 			"vars"
 			{
-				"name"					"#PL_gg"
-				"lobbytitle"			"#PL_gg_lobby"
-				"description"			"#PL_gg_desc"
-				"abbreviation"			"#PL_gg_abbr"
+				"name"					"#PL_econ"
+				"lobbytitle"			"#PL_econ_lobby"
+				"description"			"#PL_econ_desc"
+				"abbreviation"			"#PL_econ_abbr"
 				"image"					"varietypack"
-				// mixtape_slot 7
-				"mixtape_timeout"		"120"
-				"visible"				"0"
 			}
 			"gamemodes"
 			{
