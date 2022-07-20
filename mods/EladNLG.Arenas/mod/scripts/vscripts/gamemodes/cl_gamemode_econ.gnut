@@ -13,6 +13,10 @@ void function ClGamemodeEcon_Init()
     AddServerToClientStringCommandCallback( "econ_holoshiftactive", void function(array<string> args) : () {
         RunUIScript( "Econ_SetHoloShiftActive", true )
     })
+    AddCallback_OnPlayerLifeStateChanged( void function (entity player, int oldLifeState, int newLifeState) : () {
+        if (newLifeState == LIFE_DEAD)
+            RunUIScript("Econ_ResetConsumables")
+    })
     float right = (GetScreenSize()[1] / 9.0) * 16.0
 	float down = GetScreenSize()[1]
 	float xOffset = (GetScreenSize()[0] - right) / 2
@@ -59,7 +63,6 @@ void function ClGamemodeEcon_OnEnterPrematch()
     RuiSetFloat( rui, "msgFontSize", 48.0 )
     RuiSetFloat( rui, "msgAlpha", 0.9 )
     RuiSetFloat( rui, "thicken", 0.0 )
-    RunUIScript( "Econ_ResetConsumables" )
     file.rui = rui
 }
 

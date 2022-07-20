@@ -1,7 +1,7 @@
 {
     "name": "Economy",
     "description": "A mod that adds a gamemode focused around managing your cash.",
-    "version_number": "1.0.0",
+    "version_number": "1.0.3",
     "website_url": "https://github.com/EladNLG/Economy",
     "dependencies": []
-}
+}   

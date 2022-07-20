@@ -3,4 +3,15 @@
 {
 	"viewmodel_offset_ads"							"0 0 0"
     "ui4_enable"                    "0"
+    "armor_penetration"                 "1.0"
+
+    Mods
+    {
+        econ
+        {
+            "damage_near_value"         "++4"
+            "damage_far_value"          "++4"
+            "damage_headshot_scale"     "--0.2"
+        }
+    }
 }

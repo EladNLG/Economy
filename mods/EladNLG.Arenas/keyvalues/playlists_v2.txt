@@ -22,7 +22,7 @@
 				"econ_starting_weapon"							"mp_weapon_wingman"
 				"econ_starting_money"							"800"
 				"econ_base_round_reward"						"1500"
-				"econ_round_reward_bonus_per_round"				"0"
+				"econ_round_reward_bonus_per_round"				"250"
 				"econ_base_win_reward"							"750"
 				"econ_kill_reward"								"250"
 
@@ -105,25 +105,25 @@
 				"econ_price_weapon_vinson_ammo"					"375"
 				"econ_weapon_vinson_stockpile"					"60"
 				"econ_weapon_vinson_ammo_size"					"60"
-				// ////////
+				///////////
 				// SMGs //
-				// ///////
-				"econ_price_weapon_car"							"3300"
+				//////////
+				"econ_price_weapon_car"							"2500"
 				"econ_price_weapon_car_ammo"					"500"
 				"econ_weapon_car_stockpile"						"30"
 				"econ_weapon_car_ammo_size"						"30"
 
-				"econ_price_weapon_r97"							"3300"
+				"econ_price_weapon_r97"							"2500"
 				"econ_price_weapon_r97_ammo"					"500"
 				"econ_weapon_r97_stockpile"						"48"
 				"econ_weapon_r97_ammo_size"						"48"
 
-				"econ_price_weapon_hemlok_smg"					"3150"
+				"econ_price_weapon_hemlok_smg"					"2200"
 				"econ_price_weapon_hemlok_smg_ammo"				"350"
 				"econ_weapon_hemlok_smg_stockpile"				"33"
 				"econ_weapon_hemlok_smg_ammo_size"				"33"
 
-				"econ_price_weapon_alternator_smg"				"3150"
+				"econ_price_weapon_alternator_smg"				"2800"
 				"econ_price_weapon_alternator_smg_ammo"			"350"
 				"econ_weapon_alternator_smg_stockpile"			"20"
 				"econ_weapon_alternator_smg_ammo_size"			"20"
@@ -147,7 +147,7 @@
 				// ///////////
 				// Snipers //
 				// ///////////
-				"econ_price_weapon_sniper"						"3400"
+				"econ_price_weapon_sniper"						"3500"
 				"econ_price_weapon_sniper_ammo"					"1000"
 				"econ_weapon_sniper_stockpile"					"4"
 				"econ_weapon_sniper_ammo_size"					"8"
@@ -164,33 +164,34 @@
 				// ////////////
 				// Shotguns //
 				// ////////////
-				"econ_price_weapon_mastiff"						"1950"
-				"econ_price_weapon_mastiff_ammo"				"350"
+				"econ_price_weapon_mastiff"						"3250"
+				"econ_price_weapon_mastiff_ammo"				"450"
 				"econ_weapon_mastiff_stockpile"					"8"
 				"econ_weapon_mastiff_ammo_size"					"4"
 
-				"econ_price_weapon_shotgun"						"2250"
+				"econ_price_weapon_shotgun"						"2450"
 				"econ_price_weapon_shotgun_ammo"				"450"
 				"econ_weapon_shotgun_stockpile"					"12"
 				"econ_weapon_shotgun_ammo_size"					"6"
 				// //////////////
 				// explosives //
 				// //////////////
-				"econ_price_weapon_epg"							"2600"
+				"econ_price_weapon_epg"							"2400"
 				"econ_price_weapon_epg_ammo"					"500"
 				"econ_weapon_epg_stockpile"						"5"
 				"econ_weapon_epg_ammo_size"						"5"
 
-				"econ_price_weapon_pulse_lmg"					"3200"
+				"econ_price_weapon_pulse_lmg"					"2300"
 				"econ_price_weapon_pulse_lmg_ammo"				"600"
 				"econ_weapon_pulse_lmg_stockpile"				"16"
 				"econ_weapon_pulse_lmg_ammo_size"				"16"
-				"econ_price_weapon_softball"					"2500"
-				"econ_price_weapon_softball_ammo"				"500"
+
+				"econ_price_weapon_softball"					"1450"
+				"econ_price_weapon_softball_ammo"				"250"
 				"econ_weapon_softball_stockpile"				"6"
 				"econ_weapon_softball_ammo_size"				"6"
 
-				"econ_price_weapon_smr"							"2600"
+				"econ_price_weapon_smr"							"3000"
 				"econ_price_weapon_smr_ammo"					"500"
 				"econ_weapon_smr_stockpile"						"40"
 				"econ_weapon_smr_ammo_size"						"40"
@@ -209,9 +210,9 @@
 				// ///////////////
 				// Anti-Titans //
 				// ///////////////
-				"econ_price_weapon_defender"					"3500"
-				"econ_price_weapon_defender_ammo"				"1000"
-				"econ_weapon_defender_stockpile"				"12"
+				"econ_price_weapon_defender"					"3750"
+				"econ_price_weapon_defender_ammo"				"1250"
+				"econ_weapon_defender_stockpile"				"8"
 				"econ_weapon_defender_ammo_size"				"8"
 
 				"econ_price_weapon_mgl"							"250"
@@ -224,7 +225,7 @@
 				"econ_weapon_arc_launcher_stockpile"			"2"
 				"econ_weapon_arc_launcher_ammo_size"			"2"
 
-				"econ_price_weapon_peacekraber"					"2750"
+				"econ_price_weapon_peacekraber"					"2250"
 				"econ_price_weapon_peacekraber_ammo"			"750"
 				"econ_weapon_peacekraber_stockpile"				"10"
 				"econ_weapon_peacekraber_ammo_size"				"10"

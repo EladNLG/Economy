@@ -6,6 +6,7 @@
         econ
         {
             "grapple_power_required"						"25"
+            "ammo_min_to_fire"              "0"
             "grapple_power_use_rate"						"25"
         }
     }

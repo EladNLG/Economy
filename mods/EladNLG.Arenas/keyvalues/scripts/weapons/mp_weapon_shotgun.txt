@@ -5,11 +5,30 @@
     {
 		// Spread
     }
+    Mods
+    {
+      econ
+      {
+        "spread_stand_hip"								"*0.5"
+        "spread_stand_hip_run"							"*0.5"
+        "spread_stand_hip_sprint"                       "*0.5"
+        "spread_crouch_hip"   							"*0.5"
+        "spread_air_hip"  								"*0.5"
+        "spread_stand_ads"								"*0.5"
+        "spread_crouch_ads"   							"*0.5"
+        "spread_air_ads"  								"*0.5"
+        "spread_wallrunning"  							"*0.5"
+        "spread_wallhanging"  							"*0.5"
+        "damage_far_value"                "*4"
+        "damage_near_value"               "*0.7"
+      }
+    }
     RUI_CrosshairData
     {
-        Crosshair_1
+        Crosshair_2
         {
-			"base_spread"				"0.0"
+			    "ui"						"ui/crosshair_shotgun"
+			    "base_spread"				"-2.5"
         }
     }
 }

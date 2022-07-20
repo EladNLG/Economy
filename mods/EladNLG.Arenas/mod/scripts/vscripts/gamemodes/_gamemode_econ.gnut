@@ -1,3 +1,4 @@
+untyped
 global function GamemodeEcon_Init
 
 struct 
@@ -20,6 +21,9 @@ struct
 void function GamemodeEcon_Init()
 {
 	SetSpawnpointGamemodeOverride( TEAM_DEATHMATCH )
+	AddDamageCallback( "player", OnPlayerDamaged )
+	AddDamageCallback( "npc_soldier", OnPlayerDamaged )
+	AddSpawnCallback( "npc_soldier", OnSpawned )
 	
 	#if HOLOSHIFT_ACTIVE
 	Econ_AddPriceOverride( "mp_ability_holopilot", GetCurrentPlaylistVarInt( "econ_price_ability_holoshift", 125) )
@@ -28,7 +32,7 @@ void function GamemodeEcon_Init()
 		Econ_AddPriceOverride( "mp_weapon_satchel", GetCurrentPlaylistVarInt( "econ_price_weapon_phase_satchel", 350 ))
 
 
-	Econ_AddCustomPurchase( "armor", "x2 HP", 550, void function (entity player) : () {
+	Econ_AddCustomPurchase( "armor", "x2 HP", 2500, void function (entity player) : () {
 		player.SetMaxHealth( player.GetMaxHealth() * 2 )
 	} )
 
@@ -73,8 +77,61 @@ void function GamemodeEcon_Init()
 
 		if (!attacker.IsPlayer()) return
 		Econ_AddPlayerMoney( attacker, GetCurrentPlaylistVarInt( "econ_kill_reward", 75 ) )
+
+		int militiaPanels = 0
+		int imcPanels = 0
+
+		foreach ( entity panel in GetPlayerArray_Alive() )
+		{
+			if ( panel.GetTeam() == TEAM_MILITIA )
+				militiaPanels++
+			else if ( panel.GetTeam() == TEAM_IMC )
+				imcPanels++
+		}
+
+		foreach (string key in file.customPurchases)
+		{
+			try
+			{
+				delete victim.s[key]
+			}
+			catch (ex)
+			{
+
+			}
+		}
+
+		if (militiaPanels <= 0)
+			SetWinner( TEAM_IMC )
+		if (imcPanels <= 0)
+			SetWinner( TEAM_MILITIA )
 	})
 	AddCallback_EntitiesDidLoad( ChooseSpawnLocations )
+}
+
+void function OnPlayerDamaged( entity player, var damageInfo )
+{
+	float damage = DamageInfo_GetDamage( damageInfo )
+	float penetration = 0.0
+	if (IsValid(DamageInfo_GetWeapon(damageInfo)) && IsWeaponKeyFieldDefined(DamageInfo_GetWeapon(damageInfo).GetWeaponClassName(), "armor_penetration"))
+	{
+		penetration = GetWeaponInfoFileKeyField_GlobalFloat( DamageInfo_GetWeapon(damageInfo).GetWeaponClassName(), "armor_penetration" )
+	}
+	else if (IsValid(DamageInfo_GetInflictor(damageInfo)) && DamageInfo_GetInflictor(damageInfo).IsProjectile())
+	{
+		entity proj = DamageInfo_GetInflictor(damageInfo)
+		if (proj.ProjectileGetWeaponClassName() != "" && IsWeaponKeyFieldDefined(proj.ProjectileGetWeaponClassName(), "armor_penetration"))
+			penetration = GetWeaponInfoFileKeyField_GlobalFloat( proj.ProjectileGetWeaponClassName(), "armor_penetration" )
+	}
+	if ("armor" in player.s)
+		DamageInfo_SetDamage( damageInfo, int(GraphCapped(penetration, 0, 1, ceil(min( pow(damage, 2) / 35.0, damage)), damage)))
+}
+
+void function OnSpawned( entity npc )
+{
+	npc.s.armor <- true
+	npc.SetMaxHealth(200)
+	npc.SetHealth(200)
 }
 
 void function TitanBought( entity player )
@@ -122,7 +179,7 @@ void function GameModeEcon_TransferWeapons()
 			if (weapon.GetLifetimeShotsRemaining() != -1)
 				weapon.SetWeaponPrimaryAmmoCount( weapon.GetLifetimeShotsRemaining() )
 		}
-		Econ_AddPlayerMoney( player, GetCurrentPlaylistVarInt( "econ_base_round_reward", 300 ) + ( GetCurrentPlaylistVarInt( "econ_round_reward_bonus_per_round", 25 ) * GetRoundsPlayed() ) )
+		Econ_AddPlayerMoney( player, GetCurrentPlaylistVarInt( "econ_base_round_reward", 1800 ) + ( GetCurrentPlaylistVarInt( "econ_round_reward_bonus_per_round", 250 ) * GetRoundsPlayed() ) )
 		if (player.GetTeam() == level.nv.winningTeam) Econ_AddPlayerMoney( player, GetCurrentPlaylistVarInt( "econ_base_win_reward", 50 ) )
 		if (IsAlive( player )) StorePilotWeapons( player )
 		player.SetPlayerGameStat( PGS_DEFENSE_SCORE, player.GetPlayerGameStat( PGS_ASSAULT_SCORE ) )
@@ -194,10 +251,11 @@ bool function OnClientCommand_Buy( entity player, array<string> args )
 
 	if (file.customPurchases.contains(weapon))
 	{
-		if (Econ_PlayerHasEnoughMoney( player, file.customPrices[weapon] ) )
+		if (Econ_PlayerHasEnoughMoney( player, file.customPrices[weapon] ) && !(weapon in player.s) )
 		{
 			Econ_TakePlayerMoney( player, file.customPrices[weapon] )
 			thread file.customPurchaseCallbacks[weapon]( player )
+			player.s[weapon] <- true
 		}
 	}
 
